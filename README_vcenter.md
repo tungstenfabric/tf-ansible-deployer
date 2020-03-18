@@ -42,7 +42,7 @@ tar –xvf {Ansible deployer}.tgz
 or clone latest version from github:
 
 ```
-git clone http://www.github.com/Juniper/contrail-ansible-deployer
+git clone http://www.github.com/tungstenfabric/tf-ansible-deployer
 ```
 
 ## Populate vcenter_vars.yml

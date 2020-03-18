@@ -49,7 +49,7 @@ pip install ansible==2.5.2.0
 Next, clone the contrail-ansible-deployer repo and populate the configuration:
 
 ```
-git clone https://github.com/Juniper/contrail-ansible-deployer
+git clone https://github.com/tungstenfabric/tf-ansible-deployer
 cd contrail-ansible-deployer
 > config/instances.yaml
 vi config/instances.yaml

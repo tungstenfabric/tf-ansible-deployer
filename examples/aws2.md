@@ -71,11 +71,11 @@ If You set `InstallContrail: Yes`, logs from deployment can be found in `/var/lo
 
 By default contrail ansible deployer will deploy env from:
 
-https://raw.githubusercontent.com/Juniper/contrail-ansible-deployer/master/examples/aws/contrail_with_k8s.yaml
+https://raw.githubusercontent.com/tungstenfabric/tf-ansible-deployer/master/examples/aws/contrail_with_k8s.yaml
 
 Other templates are available in
 
-https://github.com/Juniper/contrail-ansible-deployer/tree/master/examples/aws/
+https://github.com/tungstenfabric/tf-ansible-deployer/tree/master/examples/aws/
 
 You can always prepare own template and serve it to cloudformation from any http url (gist, nopaste, s3, own http server, ...)
 

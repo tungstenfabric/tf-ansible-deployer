@@ -1,0 +1,10 @@
+---
+- name: OS specific package install
+  include: RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: install git to operate on kolla branches
+  package:
+    name: git
+    state: present
+  become: yes

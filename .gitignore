@@ -1,0 +1,5 @@
+playbooks/*.retry
+*.pyc
+playbooks/test.yml
+.project
+.vscode

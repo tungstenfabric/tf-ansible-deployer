@@ -18,7 +18,7 @@ The example setup consists of a 3 Contrail controllers and 2 computes.
 - 3x Contrail Control Plane
 - 2x ESXi Compute
 
-You will also need base host, on which contrail-ansible-deployer will be installed.
+You will also need base host, on which tf-ansible-deployer will be installed.
 
 **NOTE**: This is just an example deployment for simple test purposes. It is NOT a sizing recommendation or specification.
 
@@ -33,7 +33,7 @@ yum install -y python-pip git gcc python-devel sshpass
 pip install "ansible==2.5.0" pyvmomi
 ```
 
-Next, get the contrail-ansible-deployer from https://www.juniper.net/support/downloads/?p=contrail#sw:
+Next, get the tf-ansible-deployer from https://www.juniper.net/support/downloads/?p=contrail#sw:
 
 ```
 tar –xvf {Ansible deployer}.tgz
@@ -42,14 +42,14 @@ tar –xvf {Ansible deployer}.tgz
 or clone latest version from github:
 
 ```
-git clone http://www.github.com/Juniper/contrail-ansible-deployer
+git clone http://www.github.com/tungstenfabric/tf-ansible-deployer
 ```
 
 ## Populate vcenter_vars.yml
 
 Next, populate the following file: playbooks/roles/vcenter/vars/vcenter_vars.yml
 
-NOTE: https://github.com/Juniper/contrail-ansible-deployer/blob/master/playbooks/roles/vcenter/vars/vcenter_vars.yml.sample is the complete set of configuration variables
+NOTE: https://github.com/tungstenfabric/tf-ansible-deployer/blob/master/playbooks/roles/vcenter/vars/vcenter_vars.yml.sample is the complete set of configuration variables
 
 Here is an vcenter_vars.yml example that is multi-node and multi-nic:
 
@@ -125,7 +125,7 @@ esxihosts:
 The 1st deployment step is to deploy the vCenter components:
 
 ```
-cd contrail-ansible-deployer
+cd tf-ansible-deployer
 ansible-playbook playbooks/vcenter.yml
 
 ```
@@ -139,7 +139,7 @@ management and control/data, this is also a good time to validate your routing t
 The 2nd deployment step is to configure the instances.yaml. 
 
 ```
-cd contrail-ansible-deployer
+cd tf-ansible-deployer
 > config/instances.yaml
 vi config/instances.yaml
 

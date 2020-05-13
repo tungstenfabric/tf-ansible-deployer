@@ -19,8 +19,8 @@ and running. Make sure to install contrail roles on the infrastucture/boot
 instance.
 
 ```
-git clone http://github.com/juniper/contrail-ansible-deployer
-cd contrail-ansible-deployer
+git clone http://github.com/tungstenfabric/tf-ansible-deployer
+cd tf-ansible-deployer
 cat << EOF > config/instances.yaml
 provider_config:
   bms:

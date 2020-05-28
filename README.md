@@ -11,7 +11,7 @@ ssh-copy-id 192.168.1.100
 #curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 #chmod +x ./get-pip.py
 #./get-pip.py
-pip install ansible==2.5.2.0
+pip install ansible==2.7.18
 #For Contrail R5.0 use 
 git clone -b R5.0 http://github.com/Juniper/contrail-ansible-deployer
 #For master branch use
@@ -95,7 +95,7 @@ Please check [Optional Contrail Analytics Components](https://github.com/Juniper
 ## Prerequisites
 
 - CentOS 7.4 (kernel >= 3.10.0-693.17.1)
-- Ansible (==2.5.2.0)
+- Ansible (==2.7.18)
 - working name resolution through either DNS or host file for long and short hostnames of the cluster nodes
 - docker engine (tested with 17.03.1-ce)
 - docker-compose (tested with 1.17.0) installed
@@ -399,3 +399,6 @@ global_configuration:
 This repository contains several playbooks which are to be involved separately and various roles which are named acccording to the following:
 1. XXX_deployer roles (contrail_deployer, aws_deployer, kolla_deployer, ...) are the roles which are to be run on the deployment machine (the one running ansible_deployer) and to affect the whole cluster. They prepare global variables, initialize kolla or k8s cluster, etc. They are named after ansible_deployer and could've been named contrail_ansible_deployer, aws_ansible_deployer, etc.
 2. XXX roles (contrail, k8s, vcenter, ...) are the roles to be assigned to particular nodes - computes, controllers, analytics_databases and such.
+
+# Known issues
+- If you use as a registry docker.io not set up param `docker_registry` in `instances.yaml` file. Due to unknown bugs in ansible/docker module it can't find image with registry docker.io even if it can pull it.

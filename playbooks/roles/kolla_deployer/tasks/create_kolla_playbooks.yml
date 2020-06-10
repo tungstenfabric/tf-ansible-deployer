@@ -6,7 +6,7 @@
 
 - name: Clone openstack git repo
   git:
-    repo: https://github.com/Juniper/contrail-kolla-ansible.git
+    repo: https://github.com/tungstenfabric/tf-kolla-ansible.git
     dest: "{{ kolla_dir }}"
     force: "{{ force_clone }}"
   ignore_errors: yes

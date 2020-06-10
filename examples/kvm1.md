@@ -3,8 +3,8 @@ This example creates, configures and installs 5 KVM instances. The first 3 insta
 are configured as control plane nodes and the remaining 2 as data plane nodes.    
 The provider_config.kvm parameters must be adjusted!     
 ```
-git clone http://github.com/juniper/contrail-ansible-deployer
-cd contrail-ansible-deployer
+git clone http://github.com/tungstenfabric/tf-ansible-deployer
+cd tf-ansible-deployer
 cat << EOF > config/instances.yaml
 provider_config:
   kvm:

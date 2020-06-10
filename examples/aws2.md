@@ -55,27 +55,27 @@ https://s3-eu-west-1.amazonaws.com/contrail-ansible-deployer/cloudformation_temp
 
 - Next.
 - Give a name to the stack.
-- Choose HTTP url for contrail-ansible-deployer config template.
+- Choose HTTP url for tf-ansible-deployer config template.
 - Optinal: change other values. Next. Next. Next. Create.
 - Refresh the page until the stack is in CREATE_COMPLETE status.
 
 When stack will be deployed, please see `output` tab in cloudformation. It will contain
-ssh command to log to contrail-ansible-deployer `base` host. You should use password to log there.
+ssh command to log to tf-ansible-deployer `base` host. You should use password to log there.
 
 From this node You can access all other nodes (user `centos`). IP addressess can be obtain from AWS console
 (EC2 service).
 
 If You set `InstallContrail: Yes`, logs from deployment can be found in `/var/log/messages`
 
-## Contrail-ansible-deployer templates
+## tf-ansible-deployer templates
 
 By default contrail ansible deployer will deploy env from:
 
-https://raw.githubusercontent.com/Juniper/contrail-ansible-deployer/master/examples/aws/contrail_with_k8s.yaml
+https://raw.githubusercontent.com/tungstenfabric/tf-ansible-deployer/master/examples/aws/contrail_with_k8s.yaml
 
 Other templates are available in
 
-https://github.com/Juniper/contrail-ansible-deployer/tree/master/examples/aws/
+https://github.com/tungstenfabric/tf-ansible-deployer/tree/master/examples/aws/
 
 You can always prepare own template and serve it to cloudformation from any http url (gist, nopaste, s3, own http server, ...)
 
@@ -83,6 +83,6 @@ You can always prepare own template and serve it to cloudformation from any http
 
 When You finish, You should cleanup yours AWS resources.
 
-1) Remove all EC2 instances created by contrail-ansible-deployer
-2) Remove ssh key-pair created by contrail-ansible-deployer
+1) Remove all EC2 instances created by tf-ansible-deployer
+2) Remove ssh key-pair created by tf-ansible-deployer
 3) Remove Cloudformation stack

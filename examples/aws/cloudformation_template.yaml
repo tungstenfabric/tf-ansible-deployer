@@ -67,7 +67,7 @@ Parameters:
   AnsibleDeployerConfigUrl:
     Description: URL to ansible deployer config file
     Type: String
-    Default: https://raw.githubusercontent.com/Juniper/contrail-ansible-deployer/master/examples/aws/contrail_with_k8s.yaml
+    Default: https://raw.githubusercontent.com/tungstenfabric/tf-ansible-deployer/master/examples/aws/contrail_with_k8s.yaml
 
 Mappings:
   AWSInstanceType2Arch:
@@ -286,8 +286,8 @@ Resources:
               aws ec2 import-key-pair --public-key-material file:///root/.ssh/id_rsa.pub --key-name contrail-${STACK_NAME}
 
               cd /root
-              git clone https://github.com/Juniper/contrail-ansible-deployer
-              cd contrail-ansible-deployer
+              git clone https://github.com/tungstenfabric/tf-ansible-deployer
+              cd tf-ansible-deployer
               git reset --hard ${CONTRAIL_DEPLOYER_COMMIT}
 
               wget ${CONFIG_URL} -O /tmp/instances.yaml

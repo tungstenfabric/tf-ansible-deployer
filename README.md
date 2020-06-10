@@ -13,10 +13,10 @@ ssh-copy-id 192.168.1.100
 #./get-pip.py
 pip install ansible==2.7.18
 #For Contrail R5.0 use 
-git clone -b R5.0 http://github.com/Juniper/contrail-ansible-deployer
+git clone -b R5.0 http://github.com/tungstenfabric/tf-ansible-deployer
 #For master branch use
-git clone http://github.com/Juniper/contrail-ansible-deployer
-cd contrail-ansible-deployer
+git clone http://github.com/tungstenfabric/tf-ansible-deployer
+cd tf-ansible-deployer
 ansible-playbook -i inventory/ -e orchestrator=kubernetes -e '{"instances":{"bms1":{"ip":"192.168.1.100","provider":"bms"}}}' playbooks/configure_instances.yml
 ansible-playbook -i inventory/ -e orchestrator=kubernetes -e '{"instances":{"bms1":{"ip":"192.168.1.100","provider":"bms"}}}' playbooks/install_contrail.yml
 ansible-playbook -i inventory/ -e orchestrator=kubernetes -e '{"instances":{"bms1":{"ip":"192.168.1.100","provider":"bms"}}}' playbooks/install_k8s.yml
@@ -109,10 +109,10 @@ Please check [Optional Contrail Analytics Components](https://github.com/Juniper
 
 ```
 #For Contrail R5.0 use 
-git clone -b R5.0 http://github.com/Juniper/contrail-ansible-deployer
+git clone -b R5.0 http://github.com/tungstenfabric/tf-ansible-deployer
 
 #For master branch use
-git clone http://github.com/Juniper/contrail-ansible-deployer
+git clone http://github.com/tungstenfabric/tf-ansible-deployer
 ```
 
 ### Providers

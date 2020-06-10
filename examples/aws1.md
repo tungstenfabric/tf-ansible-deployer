@@ -3,7 +3,7 @@
 This document contains instructions to deploy a Contrail cluster with OpenStack on AWS.
 To deploy OpenStack cluster we use OpenStack Kolla.
 
-Deploying Kolla containers using contrail-kolla-ansible and contrail containers using contrail-ansible-deployer involves the following broad steps:
+Deploying Kolla containers using contrail-kolla-ansible and contrail containers using tf-ansible-deployer involves the following broad steps:
 ```
 1. Setup base host
 2. Deploy Openstack (kolla) and Contrail containers
@@ -30,7 +30,7 @@ The example setup consists of a five EC2 instances.
 
 Each AWS EC2 has the resources defined by AWS flavor. (https://aws.amazon.com/ec2/instance-types/)
 
-You will also need base host, on which contrail-ansible-deployer will be installed.
+You will also need base host, on which tf-ansible-deployer will be installed.
 
 You don't need to create the VMs. Instead, the deployment scripts will do it for you.
 
@@ -46,11 +46,11 @@ yum install -y python-urllib3 git python-pip python-boto python2-boto3
 pip install ansible==2.7.18
 ```
 
-Next, clone the contrail-ansible-deployer repo and populate the configuration:
+Next, clone the tf-ansible-deployer repo and populate the configuration:
 
 ```
-git clone https://github.com/Juniper/contrail-ansible-deployer
-cd contrail-ansible-deployer
+git clone https://github.com/tungstenfabric/tf-ansible-deployer
+cd tf-ansible-deployer
 > config/instances.yaml
 vi config/instances.yaml
 ```

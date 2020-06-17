@@ -1,0 +1,47 @@
+provider_config:
+  bms:
+    ssh_pwd:
+    ssh_user:
+    ssh_public_key:
+    ssh_private_key:
+    ntpserver: 192.168.1.1
+    domainsuffix: local
+
+instances:
+  contrail-bms-server:
+    provider: bms
+    ip: 192.168.1.101
+    roles:
+      config_database:
+      config:
+      control:
+      analytics_database:
+      analytics:
+      analytics_snmp:
+      analytics_alarm:
+      webui:
+
+  openstack-control-bms-server:
+    provider: bms
+    ip: 192.168.1.102
+    roles:
+      openstack_control:
+
+  openstack-compute-bms-server:
+    provider: bms
+    ip: 192.168.1.103
+    roles:
+      openstack_compute:
+
+global_configuration:
+  CONTAINER_REGISTRY: tungstenfabric
+
+contrail_configuration:
+  CONTRAIL_VERSION: latest
+
+kolla_globals:
+  neutron_plugin_agent: opencontrail-ml2
+  enable_opencontrail_rbac: no
+  contrail_dm_integration: True
+  neutron_type_drivers: "local,vlan,gre,vxlan"
+  neutron_tenant_network_types: "local,vlan"

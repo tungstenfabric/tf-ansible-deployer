@@ -49,9 +49,17 @@
     - contrail-controller-config-svcmonitor
     - contrail-controller-config-schema
     - contrail-controller-config-devicemgr
-    - contrail-controller-config-stats
     - contrail-provisioner
   when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
+
+- name: update config-stats image
+  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
+  with_items:
+    - contrail-controller-config-stats
+  when:
+    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
+    - contrail_configuration.KEEP_STATS_CONTAINER is defined
+    - contrail_configuration.KEEP_STATS_CONTAINER|bool
 
 - name: initialize use_external_tftp variable
   set_fact:

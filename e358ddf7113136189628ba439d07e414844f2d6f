@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9292d7d2_fa5e1c63",
+        "filename": "playbooks/roles/contrail_config/templates/contrail-config.yaml.j2",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 437
+      },
+      "writtenOn": "2020-07-27T14:58:01Z",
+      "side": 1,
+      "message": "ENABLE_STATS_SERVER?",
+      "range": {
+        "startLine": 160,
+        "startChar": 29,
+        "endLine": 160,
+        "endChar": 49
+      },
+      "revId": "e358ddf7113136189628ba439d07e414844f2d6f",
+      "serverId": "c72cd27d-1743-4a55-84a4-cd13b8400c52",
+      "unresolved": true
+    }
+  ]
+}

@@ -4,24 +4,62 @@ This set of playbooks installs Contrail Networking using a microservices archite
 
 # quick start for the impatient (requires a CentOS7 instance)...
 
-This set of commands will configure the instance and install AIO contrail with k8s on the instance:
+This set of commands will configure a **single node** instance and install AIO contrail with k8s on the instance:
 ```
-ssh-copy-id 192.168.1.100
-#following can be used to install pip on system, if not installed already
-#curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-#chmod +x ./get-pip.py
-#./get-pip.py
-pip install ansible==2.7.18
-#For Contrail R5.0 use 
-git clone -b R5.0 http://github.com/tungstenfabric/tf-ansible-deployer
-#For master branch use
-git clone http://github.com/tungstenfabric/tf-ansible-deployer
+sudo yum install python3
+sudo yum install git
+sudo yum install sshpass
+sudo pip3 install ansible==2.7.18
+sudo pip3 install requests
+
+ssh-keygen -t rsa
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+sudo vi /etc/selinux/config
+# Change SELINUX=permissive to SELINUX=disabled
+
+git clone https://github.com/tungstenfabric/tf-ansible-deployer.git
+# For Contrail R5.0 use 
+# git clone -b R5.0 http://github.com/tungstenfabric/tf-ansible-deployer
+
 cd tf-ansible-deployer
-ansible-playbook -i inventory/ -e orchestrator=kubernetes -e '{"instances":{"bms1":{"ip":"192.168.1.100","provider":"bms"}}}' playbooks/configure_instances.yml
-ansible-playbook -i inventory/ -e orchestrator=kubernetes -e '{"instances":{"bms1":{"ip":"192.168.1.100","provider":"bms"}}}' playbooks/install_contrail.yml
-ansible-playbook -i inventory/ -e orchestrator=kubernetes -e '{"instances":{"bms1":{"ip":"192.168.1.100","provider":"bms"}}}' playbooks/install_k8s.yml
+# Replace config/instances.yaml with config/instances.yaml.bms_kubernetes_example
+vi config/instances.yaml
+# Remember to replace 192.168.1.100 with the contrail physcial/vhost0 IP
+
+ansible-playbook -i inventory/ playbooks/configure_instances.yml
+
+sudo yum remove kubectl kubeadm kubelet
+# Run this:
+  cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+  [kubernetes]
+  name=Kubernetes
+  baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+  enabled=1
+  gpgcheck=1
+  repo_gpgcheck=1
+  gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+  EOF
+
+sudo yum install kubectl-1.14.8 kubeadm-1.14.8 kubelet-1.14.8
+sudo kubeadm init
+
+sudo -i
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
+exit
+
+ansible-playbook -i inventory/ playbooks/install_contrail.yml
+ansible-playbook -i inventory/ playbooks/install_k8s.yml
+# It is possible install_k8s uses the incorrect name in programmatically running this command
+# If an error is thrown, run this command with `node_name` replaced by the name result of 'kubectl get nodes' -> returns 'a3s2', for example
+# kubectl taint nodes `node-name` node-role.kubernetes.io/master-
+# Need to replace node-name with 'a3s2', for example
 ```
-The ip address 192.168.1.100 has to be replaced with the instances ip address
+The ip address 192.168.1.100 has to be replaced with the node's IP addresses
+
+**Note if pip (pip2) is on your system, and you run into errors with it, delete pip the deployer can install it**
 
 # the long story
 
@@ -401,4 +439,8 @@ This repository contains several playbooks which are to be involved separately a
 2. XXX roles (contrail, k8s, vcenter, ...) are the roles to be assigned to particular nodes - computes, controllers, analytics_databases and such.
 
 # Known issues
+- The ansible playbooks don't automatically install requests (python3) or sshpass
+- The configure_instances ansible playbook requires a non-standard version of python2 so it is best to let ansible install python2 itself. THus you may need to manually remove an old version of python2
+- The configure_instances ansible playbook may hit an error regarding the module br_netfilter not being found. In this case change the SELINUX policy to disabled in /etc/selinux/config
+- In the install_k8s playbook during the untaint node step, the program may use the wrong node name resulting in the node not being found. The solution is to run the taint command manually, replacing the node name in the command with the node name returned by kubectl get nodes
 - If you use as a registry docker.io not set up param `docker_registry` in `instances.yaml` file. Due to unknown bugs in ansible/docker module it can't find image with registry docker.io even if it can pull it.

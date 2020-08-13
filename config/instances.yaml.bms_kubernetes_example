@@ -1,0 +1,34 @@
+deployment:
+    deployer: contrail-ansible-deployer
+provider_config:
+  bms:
+    ssh_pwd: 1234  # Set password
+    ssh_user: root # Set username
+instances:
+  bms1:
+    provider: bms
+    ip: 192.168.1.100
+    roles:
+      k8s_master:
+      kubemanager:
+      analytics:
+      analytics_alarm:
+      analytics_database:
+      config:
+      config_database:
+      control:
+      webui:
+      k8s_node:
+      vrouter:
+global_configuration:
+  CONTAINER_REGISTRY: svl-artifactory.juniper.net/contrail-nightly
+  REGISTRY_PRIVATE_INSECURE: true
+contrail_configuration:
+  CLOUD_ORCHESTRATOR: kubernetes
+  CONTRAIL_VERSION: "2005.62" # Replace with desired contrail version
+  CONTROLLER_NODES: 192.168.1.99 # Replace with managment IP
+  CONTROL_NODES: 192.168.1.100
+  KUBERNETES_API_NODES: 192.168.1.100
+  KUBERNETES_API_SERVER: 192.168.1.100
+  CONTAINER_REGISTRY: svl-artifactory.juniper.net/contrail-nightly
+  REGISTRY_PRIVATE_INSECURE: True

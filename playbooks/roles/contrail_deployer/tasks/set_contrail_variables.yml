@@ -128,6 +128,7 @@
     openstack_internal_vip: "{{ openstack_nodes_list | first }}"
   when:
     - contrail_configuration.CLOUD_ORCHESTRATOR == 'openstack'
+    - openstack_nodes_list | length > 0
     - kolla_config.kolla_globals.enable_haproxy is defined
     - not (kolla_config.kolla_globals.enable_haproxy | bool)
   tags:
@@ -148,6 +149,7 @@
   when:
     - item.is_not_defined | bool
     - contrail_configuration.CLOUD_ORCHESTRATOR == 'openstack'
+    - openstack_internal_vip is defined
   tags:
     - always
   with_items:

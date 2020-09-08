@@ -5,7 +5,7 @@
     state: directory
     recurse: yes
 
-- name: update contrail-snmp-collector and contrail-analytics-snmp-topology image
+- name: update tf-snmp-collector and contrail-analytics-snmp-topology image
   shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
   with_items:
     - contrail-node-init

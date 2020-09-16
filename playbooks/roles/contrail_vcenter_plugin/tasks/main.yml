@@ -87,7 +87,9 @@
 - name: update computeVM map file
   lineinfile: dest=/etc/contrail/vcenter_plugin/ESXiToVRouterIp.map line="{{ instances[item.key].esxi_host }}:{{ instances[item.key].ip }}"
   with_dict: "{{ instances }}"
-  when: roles[item.key].vrouter is defined and instances[item.key].esxi_host is defined
+  when:
+    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
+    - roles[item.key].vrouter is defined and instances[item.key].esxi_host is defined
  
 - name: start contrail vcenter-plugin
   docker_service:

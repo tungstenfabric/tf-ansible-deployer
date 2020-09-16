@@ -13,6 +13,7 @@
     - contrail-analytics-snmp-topology
     - contrail-analytics-snmp-collector
     - contrail-provisioner
+  when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
 
 - name: create contrail analytics_snmp docker-compose file
   template:

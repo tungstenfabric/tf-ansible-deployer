@@ -23,6 +23,7 @@
     - contrail-analytics-alarm-gen
     - contrail-external-kafka
     - contrail-provisioner
+  when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
 
 - name: create contrail analytics_alarm docker-compose file
   template:

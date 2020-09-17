@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ce969ac_635a044d",
+        "filename": "playbooks/roles/contrail_vcenter_plugin/tasks/main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 382
+      },
+      "writtenOn": "2020-09-17T05:09:00Z",
+      "side": 1,
+      "message": "looks like this line is not related to change",
+      "revId": "d7a03fcc91df3271ae79e86fd4cf1a877f572fa1",
+      "serverId": "c72cd27d-1743-4a55-84a4-cd13b8400c52",
+      "unresolved": true
+    }
+  ]
+}

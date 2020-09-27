@@ -81,6 +81,21 @@
     - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
     - roles[instance_name].vrouter.AGENT_MODE is undefined or roles[instance_name].vrouter.AGENT_MODE != 'dpdk'
 
+- name: if old tf_vrouter compose file exists
+  stat:
+    path: "/etc/contrail/vrouter/docker-compose.yaml"
+  register: old_compose_file_stat
+
+- name: get information from old tf_vrouter compose file
+  include_vars:
+    file: "/etc/contrail/vrouter/docker-compose.yaml"
+    name: old_compose
+  when: old_compose_file_stat.stat.exists == True
+
+- name: kill docker container if contrail version changed
+  shell: "docker-compose -f /etc/contrail/vrouter/docker-compose.yaml kill -s SIGQUIT"
+  when: old_compose is defined and old_compose.services['vrouter-agent'].image != container_registry + "/contrail-vrouter-agent:" + contrail_version_tag
+
 - name: create contrail vrouter compose file
   template:
     src: contrail-vrouter.yaml.j2

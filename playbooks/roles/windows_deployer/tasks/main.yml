@@ -4,6 +4,9 @@
   pip:
     name: "{{ item }}"
     state: latest
+  register: res
+  retries: 5
+  until: res | success
   with_items:
     - pywinrm
     - requests

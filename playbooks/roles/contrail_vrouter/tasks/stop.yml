@@ -1,0 +1,17 @@
+# We only send sigkill to the vrouter-agent, because there is no
+# corresponding handler in other vrouter containers
+- name: kill vrouter-agent docker container
+  shell: "docker-compose -f /etc/contrail/vrouter/docker-compose.yaml kill -s SIGQUIT vrouter-agent"
+
+- name: get id of vrouter-agent docker container
+  shell: "docker-compose -f /etc/contrail/vrouter/docker-compose.yaml ps -q vrouter-agent"
+  register: vrouter_agent_container_output
+
+- set_fact: vrouter_agent_container={{ vrouter_agent_container_output.stdout }}
+
+- name: check if container does not running
+  shell: "{% raw %}docker inspect --format='{{json .State.Status}}'{% endraw %} {{ vrouter_agent_container }}"
+  register: vrouter_agent_container_status
+  retries: 10
+  until: vrouter_agent_container_status.rc != 0 or vrouter_agent_container_status.stdout != "\"running\""
+  ignore_errors: yes

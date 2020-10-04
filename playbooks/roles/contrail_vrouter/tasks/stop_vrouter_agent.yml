@@ -1,0 +1,37 @@
+# Stops the vrouter-agent if the target contrail version is different
+# from the installed one. This is used in ziu to update the kernel version
+# of the vrouter-agent.
+
+- name: get old tf_vrouter compose file
+  stat:
+    path: "/etc/contrail/vrouter/docker-compose.yaml"
+  register: old_compose_file_stat
+
+- name: get information from old tf_vrouter compose file
+  include_vars:
+    file: "/etc/contrail/vrouter/docker-compose.yaml"
+    name: old_compose
+  when: old_compose_file_stat.stat.exists == True
+
+- set_fact:
+    is_vrouter_agent_version_changed: "{{ old_compose is defined and old_compose.services['vrouter-agent'].image != container_registry + '/contrail-vrouter-agent:' + contrail_version_tag }}"
+
+- name: stop vrouter-agent when tf version changed
+  block:
+    - name: kill vrouter-agent docker container
+      shell: "docker-compose -f /etc/contrail/vrouter/docker-compose.yaml kill -s SIGQUIT vrouter-agent"
+
+    - name: get id of vrouter-agent docker container
+      shell: "docker-compose -f /etc/contrail/vrouter/docker-compose.yaml ps -q vrouter-agent"
+      register: vrouter_agent_container_output
+
+    - set_fact:
+        vrouter_agent_container={{ vrouter_agent_container_output.stdout }}
+
+    - name: check if container does not running
+      shell: "{% raw %}docker inspect --format='{{json .State.Status}}'{% endraw %} {{ vrouter_agent_container }}"
+      register: vrouter_agent_container_status
+      retries: 10
+      until: vrouter_agent_container_status.rc != 0 or vrouter_agent_container_status.stdout != "\"running\""
+      ignore_errors: yes
+  when: is_vrouter_agent_version_changed

@@ -1,0 +1,47 @@
+---
+  - name: Create container host group and evaluate variables for Contrail
+    hosts: localhost
+    connection: local
+    gather_facts: yes
+    pre_tasks:
+      - name: Expose instances
+        set_fact:
+            instances: "{{ instances }}"
+        when: hostvars['localhost']['instances'] is undefined
+      - name: Expose global configuration
+        set_fact:
+            global_configuration: "{{ global_configuration | default({}) }}"
+        when: hostvars['localhost']['global_configuration'] is undefined
+      - name: Expose remote_locations configuration
+        set_fact:
+            remote_locations: "{{ remote_locations | default({}) }}"
+        when: hostvars['localhost']['remote_locations'] is undefined
+      - name: Expose provider config
+        set_fact:
+            provider_config: "{{ provider_config | default({}) }}"
+        when: hostvars['localhost']['provider_config'] is undefined
+    roles:
+      - contrail_deployer
+      - k8s_deployer
+    vars_files:
+      - "{{ config_file }}"
+    tags: always
+    environment:
+      - "{{ contrail_ansible_environment | default({})}}"
+
+  - name: Kill Vrouter-Agent
+    hosts: container_hosts
+    gather_facts: yes
+    tasks:
+      - include_role:
+          name: contrail_vrouter
+          tasks_from: stop_vrouter_agent
+    vars:
+      - contrail_configuration: "{{ hostvars['localhost'].contrail_configuration }}"
+    environment:
+      - https_proxy: "{{ contrail_configuration.HTTPS_PROXY|default('') }}"
+      - http_proxy: "{{ contrail_configuration.HTTP_PROXY|default('') }}"
+      - "{{ contrail_ansible_environment | default({}) }}"
+    tags: always
+
+  - include: install_contrail.yml

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4c02793_af28d836",
+        "filename": "playbooks/roles/contrail_vrouter/tasks/stop_vrouter_agent.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 445
+      },
+      "writtenOn": "2020-10-05T15:27:31Z",
+      "side": 1,
+      "message": "The task should be called stop.yml not stop_vroute_agent.yml. It is already in the vrouter_agent role",
+      "revId": "6d61a537a07b76c65bf37c09e42492aa842b3009",
+      "serverId": "c72cd27d-1743-4a55-84a4-cd13b8400c52",
+      "unresolved": true
+    }
+  ]
+}

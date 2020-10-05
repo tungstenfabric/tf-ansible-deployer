@@ -45,3 +45,6 @@
   pip:
     name: pip>10
   become: yes
+  register: res
+  retries: 5
+  until: res | success

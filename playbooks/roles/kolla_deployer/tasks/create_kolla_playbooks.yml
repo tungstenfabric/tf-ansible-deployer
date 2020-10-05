@@ -36,6 +36,9 @@
 - name: install kolla requirements
   pip:
     requirements: "{{ kolla_dir }}/requirements.txt"
+  register: res
+  retries: 5
+  until: res | success
 
 - name: install kolla libraries
   shell: "python setup.py install --force"

@@ -80,3 +80,6 @@
 - name: "start contrail cni"
   docker_service:
     project_src: /etc/contrail/cni
+  environment:
+    DOCKER_CLIENT_TIMEOUT: '120'
+    COMPOSE_HTTP_TIMEOUT: '120'

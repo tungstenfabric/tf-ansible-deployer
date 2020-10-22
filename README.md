@@ -90,7 +90,7 @@ Please note that the below components in analytics are optional
   zookeeper
 ```
 
-Please check [Optional Contrail Analytics Components](https://github.com/Juniper/contrail-ansible-deployer/blob/master/README.md#optional-contrail-analytics-component
+Please check [Optional Contrail Analytics Components](https://github.com/tungstgenfabric/tf-ansible-deployer/blob/master/README.md#optional-contrail-analytics-components
 
 ## Prerequisites
 

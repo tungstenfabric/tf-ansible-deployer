@@ -78,6 +78,7 @@ services:
       - /usr/src:/usr/src
       - /lib/modules:/lib/modules
       - /bin:/host/bin
+      - /etc:/host/etc
       - /var/lib/contrail:/var/lib/contrail
       - /var/run:/var/run
 {% if ansible_os_family == 'RedHat' %}

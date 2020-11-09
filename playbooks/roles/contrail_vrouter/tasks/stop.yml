@@ -15,3 +15,6 @@
   retries: 10
   until: vrouter_agent_container_status.rc != 0 or vrouter_agent_container_status.stdout != "\"running\""
   ignore_errors: yes
+
+- name: remove all built vrouter.ko
+  shell: "rm -rf /lib/modules/*/kernel/net/vrouter/vrouter.ko"

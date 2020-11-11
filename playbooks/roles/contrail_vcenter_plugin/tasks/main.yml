@@ -54,6 +54,7 @@
 - name: "create /etc/contrail/common_vcplugin.env"
   file:
     path: "/etc/contrail/common_vcplugin.env"
+    mode: "0640"
     state: touch
 
 - name: "populate cluster wide common_vcplugin.env"

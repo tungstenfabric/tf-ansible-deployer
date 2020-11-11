@@ -23,6 +23,7 @@
 - name: "create /etc/contrail/common_kubemanager_{{ kube_cluster_name }}.env"
   file:
     path: "/etc/contrail/common_kubemanager_{{ kube_cluster_name }}.env"
+    mode: "0640"
     state: touch
 
 - name: "populate global common_kubemanager.env"

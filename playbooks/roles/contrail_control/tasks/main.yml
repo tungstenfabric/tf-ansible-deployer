@@ -19,6 +19,7 @@
 - name: "create /etc/contrail/common_control.env"
   file:
     path: "/etc/contrail/common_control.env"
+    mode: "0640"
     state: touch
 
 - name: set location if defined

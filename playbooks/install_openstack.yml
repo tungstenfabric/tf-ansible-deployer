@@ -37,12 +37,14 @@
     - webui_nodes_list: "{{ hostvars['localhost'].webui_nodes_list }}"
   tasks:
   - name: Import group variables
+    no_log: True
     include_vars:
       dir: "{{ playbook_dir }}/../../contrail-kolla-ansible/ansible/group_vars"
       extensions: ['yml']
     tags: always
 
   - name: Import global variables
+    no_log: True
     include_vars:
       dir: "{{ playbook_dir }}/../../contrail-kolla-ansible/etc/kolla"
       extensions: ['yml']
@@ -79,10 +81,12 @@
     - kolla_config: "{{ hostvars['localhost'].get('kolla_config', None) }}"
   pre_tasks:
     - name: Import group variables
+      no_log: True
       include_vars:
         dir: "{{ playbook_dir }}/../../contrail-kolla-ansible/ansible/group_vars"
         extensions: ['yml']
     - name: Import global variables
+      no_log: True
       include_vars:
         dir: "{{ playbook_dir }}/../../contrail-kolla-ansible/etc/kolla"
         extensions: ['yml']

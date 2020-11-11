@@ -19,6 +19,7 @@
 - name: "create /etc/contrail/common_config.env"
   file:
     path: "/etc/contrail/common_config.env"
+    mode: "0640"
     state: touch
 
 - name: "populate global common_config.env"

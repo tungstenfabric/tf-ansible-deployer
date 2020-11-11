@@ -111,6 +111,7 @@
   with_dict: "{{ hostvars['localhost']['instances'] }}"
 
 - name: explicitly set OpenStack variables for Contrail
+  no_log: True
   set_fact:
     contrail_configuration: "{{ contrail_configuration | combine({item.name: item.dictionary.get(item.os_key) }) }}"
   when:
@@ -144,6 +145,7 @@
    - always
 
 - name: set OpenStack endpoints from kolla_config.kolla_globals
+  no_log: True
   set_fact:
     contrail_configuration: "{{ contrail_configuration | combine({item.name: openstack_internal_vip }) }}"
   when:
@@ -160,6 +162,7 @@
     - { name: 'networkManager_ip', is_not_defined: "{{ contrail_configuration.networkManager_ip is not defined }}" }
 
 - name: combine contrail configuration defaults with contrail configuration
+  no_log: True
   set_fact:
     contrail_configuration: "{{ contrail_configuration_keystone_default | combine(contrail_configuration) }}"
   tags:

@@ -19,6 +19,7 @@
 - name: "create /etc/contrail/common_vcmanager.env"
   file:
     path: "/etc/contrail/common_vcmanager.env"
+    mode: "0640"
     state: touch
 
 - name: "populate cluster wide common_vcmanager.env"

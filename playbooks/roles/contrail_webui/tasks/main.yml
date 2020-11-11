@@ -19,6 +19,7 @@
 - name: "create /etc/contrail/common_webui.env"
   file:
     path: "/etc/contrail/common_webui.env"
+    mode: "0640"
     state: touch
 
 - name: "populate cluster wide common_webui.env"

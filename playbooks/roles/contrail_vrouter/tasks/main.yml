@@ -41,6 +41,7 @@
   template:
     src: common_vrouter.env.j2
     dest: /etc/contrail/common_vrouter.env
+    mode: "0640"
 
 - name: "populate pop settings"
   lineinfile: dest=/etc/contrail/common_vrouter.env regexp='^{{ item.key }}=.*' line="{{ item.key }}={{ item.value }}" state=present

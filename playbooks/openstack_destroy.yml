@@ -17,11 +17,13 @@
   hosts: openstack_nodes
   tasks:
   - name: Import group variables
+    no_log: True
     include_vars:
       dir: "{{ playbook_dir }}/../../contrail-kolla-ansible/ansible/group_vars"
       extensions: ['yml']
 
   - name: Import global variables
+    no_log: True
     include_vars:
       dir: "{{ playbook_dir }}/../../contrail-kolla-ansible/etc/kolla"
       extensions: ['yml']

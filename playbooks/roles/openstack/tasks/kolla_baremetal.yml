@@ -26,6 +26,7 @@
     regexp: '^kolla'
     line: 'kolla ALL=(ALL) NOPASSWD: ALL'
   become: True
+  no_log: True
 
 - name: Packages needed for swift
   package:

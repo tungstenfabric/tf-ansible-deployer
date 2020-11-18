@@ -16,5 +16,10 @@
   until: vrouter_agent_container_status.rc != 0 or vrouter_agent_container_status.stdout != "\"running\""
   ignore_errors: yes
 
-- name: remove all built vrouter.ko
+- name: remove all built vrouter.ko on RedHat families
   shell: "rm -rf /lib/modules/*/kernel/net/vrouter/vrouter.ko"
+  when: ansible_os_family == 'RedHat'
+
+- name: remove all built vrouter.ko on Debian families
+  shell: "rm -rf /lib/modules/*/updates/dkms/vrouter.ko"
+  when: ansible_os_family == 'Debian'

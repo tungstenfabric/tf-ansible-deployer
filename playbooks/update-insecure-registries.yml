@@ -1,0 +1,10 @@
+- name: Update insecure registries in docker daemon
+  hosts: container_hosts
+  gather_facts: yes
+  roles:
+    - docker
+  vars_files:
+    - "{{ hostvars['localhost'].config_file }}"
+  environment:
+    - https_proxy: "{{ contrail_configuration.HTTPS_PROXY | default('') }}"
+    - http_proxy: "{{ contrail_configuration.HTTP_PROXY | default('') }}"

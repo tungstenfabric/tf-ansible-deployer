@@ -79,6 +79,8 @@
   gather_facts: no
   vars:
     - kolla_config: "{{ hostvars['localhost'].get('kolla_config', None) }}"
+  vars_files:
+    - "{{ config_file }}"
   pre_tasks:
     - name: Import group variables
       no_log: True

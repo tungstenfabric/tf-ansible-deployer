@@ -31,6 +31,14 @@
     environment:
       - "{{ contrail_ansible_environment | default({})}}"
 
+  - name: Prepare Docker
+    hosts: container_hosts
+    gather_facts: yes
+    roles:
+      - docker
+    vars_files:
+      - "{{ hostvars['localhost'].config_file }}"
+
   - name: ZIU stage 1 stop services
     hosts: container_hosts
     gather_facts: yes

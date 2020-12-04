@@ -2,7 +2,8 @@
 class FilterModule(object):
 
     openstack_role_groups = {
-        'openstack_nodes': ['openstack_control', 'openstack_network',
+        'openstack_nodes': [
+            'openstack_control', 'openstack_network',
             'openstack_compute', 'openstack_monitoring',
             'openstack_storage', 'openstack'],
         'control': ['openstack_control', 'openstack'],
@@ -55,7 +56,7 @@ class FilterModule(object):
         "designate-worker": ["designate"],
         "designate": ["control"],
         "elasticsearch": ["control"],
-        "etcd": [ "control"],
+        "etcd": ["control"],
         "freezer-api": ["freezer"],
         "freezer": ["control"],
         "glance-api": ["glance"],
@@ -65,7 +66,7 @@ class FilterModule(object):
         "gnocchi-metricd": ["gnocchi"],
         "gnocchi-statsd": ["gnocchi"],
         "gnocchi": ["control"],
-        "grafana": [ "monitoring"],
+        "grafana": ["monitoring"],
         "haproxy": ["network"],
         "heat-api-cfn": ["heat"],
         "heat-api": ["heat"],
@@ -73,7 +74,7 @@ class FilterModule(object):
         "heat": ["control"],
         "horizon": ["control"],
         "hyperv": [],
-        "influxd": [ "monitoring"],
+        "influxd": ["monitoring"],
         "ironic-api": ["ironic"],
         "ironic-conductor": ["ironic"],
         "ironic-inspector": ["ironic"],
@@ -86,14 +87,13 @@ class FilterModule(object):
         "karbor-api": ["karbor"],
         "karbor-operationengine": ["karbor"],
         "karbor-protection": ["karbor"],
-        "karbor": [ "control"],
+        "karbor": ["control"],
         "keystone": ["control"],
-        "kibana": [ "control"],
+        "kibana": ["control"],
         "magnum-api": ["magnum"],
         "magnum-conductor": ["magnum"],
         "magnum": ["control"],
         "manila-api": ["manila"],
-        "manila-data": ["manila"],
         "manila-data": ["manila"],
         "manila-scheduler": ["manila"],
         "manila-share": ["manila"],
@@ -172,7 +172,7 @@ class FilterModule(object):
         "swift-proxy-server": ["swift"],
         "swift": ["control"],
         "tacker": ["control"],
-        "telegraf": [ "compute","control","monitoring","network", "storage"],
+        "telegraf": ["compute", "control", "monitoring", "network", "storage"],
         "tempest": ["control"],
         "tgtd": ["storage"],
         "trove-api": ["trove"],
@@ -194,8 +194,7 @@ class FilterModule(object):
         }
 
     def openstack_host_groups(self, instances, ip):
-
-        for k,v in instances.items():
+        for k, v in instances.items():
             grp_list = []
             if v['ip'] != ip:
                 continue

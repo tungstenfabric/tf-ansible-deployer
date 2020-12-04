@@ -5,6 +5,7 @@ Filter to calculate port list and ip list
 for tsn haproxy container
 """
 
+
 class FilterModule(object):
     instances = {}
     contrail_configuration = {}
@@ -40,7 +41,6 @@ class FilterModule(object):
                 if tor_name == match_tor_name:
                     return (role, host)
         return (None, None)
-    #end get_standby_info
 
     def make_key(self, tsn1, tsn2):
         if tsn1 < tsn2:
@@ -60,24 +60,24 @@ class FilterModule(object):
             for role in instances[host]['roles']:
                 if 'toragent' not in role:
                     continue
-                tor_name= self.get_env_value_for_role(host, role, 'TOR_NAME')
+                tor_name = self.get_env_value_for_role(host, role, 'TOR_NAME')
                 tsn1 = self.get_env_value_for_role(host, role, 'TOR_TSN_IP')
                 port1 = self.get_env_value_for_role(host, role, 'TOR_OVS_PORT')
                 standby_tor_idx, standby_host = self.get_standby_info(host, tor_name)
                 key = tsn1
-                if (standby_tor_idx != None and standby_host != None):
+                if (standby_tor_idx is not None and standby_host is not None):
                     tsn2 = self.get_env_value_for_role(standby_host, standby_tor_idx, 'TOR_TSN_IP')
                     port2 = self.get_env_value_for_role(standby_host, standby_tor_idx, 'TOR_OVS_PORT')
                     if port1 == port2:
                         key = self.make_key(tsn1, tsn2)
                     else:
-                        raise Exception("Tor Agents (%s, %s) and (%s, %s) \
-                                        are configured as redundant agents but don't  \
-                                        have same ovs_port" \
-                                        %(host, role, standby_host, standby_tor_idx))
-                if not key in master_standby_dict:
+                        raise Exception("Tor Agents (%s, %s) and (%s, %s) "
+                                        "are configured as redundant agents but don't "
+                                        "have same ovs_port"
+                                        % (host, role, standby_host, standby_tor_idx))
+                if key not in master_standby_dict:
                     master_standby_dict[key] = []
-                if not port1 in master_standby_dict[key]:
+                if port1 not in master_standby_dict[key]:
                     master_standby_dict[key].append(port1)
         for key in master_standby_dict:
             tsn1 = key.split('-')[0]

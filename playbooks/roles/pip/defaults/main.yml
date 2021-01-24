@@ -1,3 +1,4 @@
 ---
 
-get_pip_url: "https://bootstrap.pypa.io/get-pip.py"
+# while default python is 2.7 we have to use pip compatibe to python2
+get_pip_url: "https://bootstrap.pypa.io/2.7/get-pip.py"

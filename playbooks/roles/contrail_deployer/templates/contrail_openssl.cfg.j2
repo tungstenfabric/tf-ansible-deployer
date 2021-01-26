@@ -36,7 +36,6 @@ RANDFILE          = {{ ssl_dir }}/.rand
 crlnumber         = {{ ssl_dir }}/crlnumber
 crl               = {{ ssl_dir }}/crl/crl.pem
 crl_extensions    = crl_ext
-default_crl_days  = 30
 
 # The root key and root certificate.
 private_key       = {{ root_ca_key }}
@@ -46,7 +45,6 @@ certificate       = {{ root_ca }}
 default_md        = sha256
 name_opt          = ca_default
 cert_opt          = ca_default
-default_days      = 375
 preserve          = no
 policy            = policy_optional
 

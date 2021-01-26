@@ -35,4 +35,4 @@
   shell: "openssl genrsa -out {{ root_ca_key }} 4096 && chmod 0600 {{ root_ca_key }}"
 
 - name: generate CA
-  shell: "openssl req -config {{ contrail_openssl_config }} -new -x509 -extensions v3_ca -key {{ root_ca_key }} -out {{ root_ca }}"
+  shell: "openssl req -config {{ contrail_openssl_config }} -days 365 -new -x509 -extensions v3_ca -key {{ root_ca_key }} -out {{ root_ca }}"

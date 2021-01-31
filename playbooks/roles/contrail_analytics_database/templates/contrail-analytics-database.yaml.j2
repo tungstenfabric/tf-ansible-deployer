@@ -4,7 +4,7 @@ volumes:
 services:
   node-init:
     image: "{{ container_registry }}/contrail-node-init:{{ contrail_version_tag }}"
-    env_file: /etc/contrail/common.env
+    env_file: /etc/contrail/common_analytics_database.env
     environment:
       - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/contrail-status:{{ contrail_version_tag }}"
     privileged: true
@@ -14,7 +14,7 @@ services:
       {{ common_volumes | to_yaml | indent(width=6) }}
   nodemgr:
     image: "{{ container_registry }}/contrail-nodemgr:{{ contrail_version_tag }}"
-    env_file: /etc/contrail/common.env
+    env_file: /etc/contrail/common_analytics_database.env
     environment:
       - NODE_TYPE=database
       - CASSANDRA_CQL_PORT=9042
@@ -37,7 +37,7 @@ services:
   provisioner:
     image: "{{ container_registry }}/contrail-provisioner:{{ contrail_version_tag }}"
     env_file:
-      - /etc/contrail/common.env
+      - /etc/contrail/common_analytics_database.env
       - /etc/contrail/defaults.env
     environment:
       - NODE_TYPE=database
@@ -57,7 +57,7 @@ services:
   query-engine:
     image: "{{ container_registry }}/contrail-analytics-query-engine:{{ contrail_version_tag }}"
     network_mode: "host"
-    env_file: /etc/contrail/common.env
+    env_file: /etc/contrail/common_analytics_database.env
     volumes_from:
       - node-init
     depends_on:
@@ -72,7 +72,7 @@ services:
         max-file: "{{ analytics_db_log_max_file }}"
   cassandra:
     image: "{{ container_registry }}/contrail-external-cassandra:{{ contrail_version_tag }}"
-    env_file: /etc/contrail/common.env
+    env_file: /etc/contrail/common_analytics_database.env
     cap_add:
       - SYS_NICE
     environment:

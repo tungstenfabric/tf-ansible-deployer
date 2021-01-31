@@ -36,7 +36,8 @@
 
 - name: "populate pod specific common_webui.env"
   lineinfile: dest=/etc/contrail/common_webui.env regexp='^{{ item.key }}=.*' line="{{ item.key }}={{ item.value }}" state=present
-  with_dict: "{{ roles[instance_name].control }}"
+  with_dict: "{{ roles[instance_name].webui | default ({}) }}"
+  when: roles[instance_name].webui is defined
   ignore_errors: yes
   no_log: True
 

@@ -15,6 +15,42 @@
     cassandra_seeds: "{{ contrail_configuration.CONTROLLER_NODES }}"
   when: contrail_configuration.CONTROLLER_NODES is defined and contrail_configuration.ANALYTICSDB_NODES is undefined
 
+- name: "get /etc/contrail/common_analytics_database.env stat"
+  stat:
+    path: "/etc/contrail/common_analytics_database.env"
+  register: st
+
+- name: "delete /etc/contrail/common_analytics_database.env if exists"
+  file:
+    path: "/etc/contrail/common_analytics_database.env"
+    state: absent
+  when: st.stat.exists is defined and st.stat.exists
+
+- name: "create /etc/contrail/common_analytics_database.env"
+  file:
+    path: "/etc/contrail/common_analytics_database.env"
+    mode: "0640"
+    state: touch
+
+- name: "populate global common_analytics_database.env"
+  lineinfile: dest=/etc/contrail/common_analytics_database.env regexp='^{{ item.key }}=.*' line="{{ item.key }}={{ item.value }}" state=present
+  with_dict: "{{ contrail_configuration }}"
+  no_log: True
+
+- name: "populate instance specific common_analytics_database.env"
+  lineinfile: dest=/etc/contrail/common_analytics_database.env regexp='^{{ item.key }}=.*' line="{{ item.key }}={{ item.value }}" state=present
+  with_dict: "{{ instances[instance_name].contrail_configuration }}"
+  when: instances[instance_name].contrail_configuration is defined
+  ignore_errors: yes
+  no_log: True
+
+- name: "populate pod specific common_analytics_database.env"
+  lineinfile: dest=/etc/contrail/common_analytics_database.env regexp='^{{ item.key }}=.*' line="{{ item.key }}={{ item.value }}" state=present
+  with_dict: "{{ roles[instance_name].analytics_database | default ({}) }}"
+  when: roles[instance_name].analytics_database is defined
+  ignore_errors: yes
+  no_log: True
+
 - name: update contrail analytics database image
   shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
   register: res

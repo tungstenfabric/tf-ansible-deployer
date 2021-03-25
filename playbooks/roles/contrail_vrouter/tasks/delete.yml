@@ -19,6 +19,9 @@
     state: absent
     remove_images: all
     remove_volumes: yes
+  environment:
+    DOCKER_CLIENT_TIMEOUT: '120'
+    COMPOSE_HTTP_TIMEOUT: '120'
   when:
     - result_name.stdout
 

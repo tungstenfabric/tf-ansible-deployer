@@ -27,3 +27,6 @@
 - name: "start redis"
   docker_service:
     project_src: /etc/contrail/redis
+  environment:
+    DOCKER_CLIENT_TIMEOUT: '120'
+    COMPOSE_HTTP_TIMEOUT: '120'

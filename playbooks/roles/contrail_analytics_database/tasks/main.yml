@@ -72,3 +72,6 @@
 - name: start contrail analyticsdb
   docker_service:
     project_src: /etc/contrail/analytics_database
+  environment:
+    DOCKER_CLIENT_TIMEOUT: '120'
+    COMPOSE_HTTP_TIMEOUT: '120'

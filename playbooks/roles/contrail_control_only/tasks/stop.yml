@@ -3,6 +3,9 @@
   docker_service:
     project_src: "/etc/contrail/control_only_{{ location.key }}"
     state: absent
+  environment:
+    DOCKER_CLIENT_TIMEOUT: '120'
+    COMPOSE_HTTP_TIMEOUT: '120'
   with_dict: "{{ remote_locations }}"
   loop_control:
     loop_var: location

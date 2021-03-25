@@ -50,3 +50,6 @@
 - name: start contrail vcenter-fabric-manager
   docker_service:
     project_src: /etc/contrail/vcenter_fabric_manager
+  environment:
+    DOCKER_CLIENT_TIMEOUT: '120'
+    COMPOSE_HTTP_TIMEOUT: '120'

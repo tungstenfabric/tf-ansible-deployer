@@ -49,7 +49,7 @@ services:
       driver: "{{ control_log_driver }}"
       options:
         max-size: "{{ control_log_max_size }}"
-        max-file: "{{ control_log_max_file }}" 
+        max-file: "{{ control_log_max_file }}"
   control:
     image: "{{ container_registry }}/contrail-controller-control-control:{{ contrail_version_tag }}"
     network_mode: "host"

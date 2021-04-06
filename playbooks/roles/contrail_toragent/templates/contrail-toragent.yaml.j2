@@ -49,7 +49,7 @@ services:
       driver: "{{ compute_log_driver }}"
       options:
         max-size: "{{ compute_log_max_size }}"
-        max-file: "{{ compute_log_max_file }}" 
+        max-file: "{{ compute_log_max_file }}"
   toragent:
     image: "{{ container_registry }}/contrail-tor-agent:{{ contrail_version_tag }}"
     network_mode: host

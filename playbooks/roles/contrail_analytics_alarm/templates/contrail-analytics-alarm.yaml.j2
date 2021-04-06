@@ -49,7 +49,7 @@ services:
       driver: "{{ analytics_alarm_log_driver }}"
       options:
         max-size: "{{ analytics_alarm_log_max_size }}"
-        max-file: "{{ analytics_alarm_log_max_file }}"   
+        max-file: "{{ analytics_alarm_log_max_file }}"
   alarm-gen:
     image: "{{ container_registry }}/contrail-analytics-alarm-gen:{{ contrail_version_tag }}"
     network_mode: "host"

@@ -49,7 +49,7 @@ services:
       driver: "{{ analytics_snmp_log_driver }}"
       options:
         max-size: "{{ analytics_snmp_log_max_size }}"
-        max-file: "{{ analytics_snmp_log_max_file }}"   
+        max-file: "{{ analytics_snmp_log_max_file }}"
   snmp-collector:
     image: "{{ container_registry }}/contrail-analytics-snmp-collector:{{ contrail_version_tag }}"
     network_mode: "host"

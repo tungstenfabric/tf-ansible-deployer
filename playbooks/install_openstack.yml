@@ -70,6 +70,18 @@
     when: st.stat.exists is defined and st.stat.exists
     tags: always
 
+  - name: Set docker environment variable DOCKER_CLIENT_TIMEOUT
+    lineinfile:
+      path: /etc/environment
+      regexp: '^DOCKER_CLIENT_TIMEOUT='
+      line: 'DOCKER_CLIENT_TIMEOUT=120'
+
+  - name: Set docker environment variable COMPOSE_HTTP_TIMEOUT 
+    lineinfile:
+      path: /etc/environment
+      regexp: '^COMPOSE_HTTP_TIMEOUT='
+      line: 'COMPOSE_HTTP_TIMEOUT=120'
+
 # include playbook may not be trivial as the playbooks will not have access to
 # the global variables. To avoid changes to kolla playbooks, including the role
 # directly

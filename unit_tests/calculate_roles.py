@@ -135,45 +135,44 @@ class MyTests(unittest.TestCase):
     def test_contrail_params(self):
         cc = ContrailCluster(
             self.instances_dict_test_delete,
-            self.contrail_configuration, {}, self.hv)
-        assert "http://" in cc.proto
+            self.contrail_configuration, {})
+        self.assertEqual("http", cc.proto)
         self.contrail_configuration.update({'SSL_ENABLE': True})
         cc2 = ContrailCluster(
             self.instances_dict_test_delete,
-            self.contrail_configuration, {},
-            self.hv)
-        assert "https://" in cc2.proto
+            self.contrail_configuration, {})
+        self.assertEqual("https", cc2.proto)
 
     @mock.patch.object(OpenStackParams, 'get_ks_auth_token', my_token)
     def test_os_params(self):
-        os_par = OpenStackParams(self.contrail_configuration, None, self.hv)
-        assert "http://" in os_par.ks_auth_proto
+        os_par = OpenStackParams(self.contrail_configuration, None)
+        self.assertEqual("http", os_par.ks_auth_proto)
         kc = {'kolla_globals': {'kolla_enable_tls_external': True}}
-        os_par_new = OpenStackParams(self.contrail_configuration, kc, self.hv)
-        assert "https://" in os_par_new.ks_auth_proto
+        os_par_new = OpenStackParams(self.contrail_configuration, kc)
+        self.assertEqual("https", os_par_new.ks_auth_proto)
 
     @mock.patch.object(OpenStackParams, 'get_ks_auth_token', my_token)
     @mock.patch.object(OpenStackParams, 'get_os_hypervisors', my_os_hypervisors_del)
     def test_calculate_deleted_os_nodes_dict(self):
         os_cluster = OpenstackCluster(
             self.instances_dict_test_delete,
-            self.contrail_configuration, {}, self.hv)
+            self.contrail_configuration, {})
         inst_nodes, del_nodes = os_cluster.discover_openstack_roles(self.hv)
-        assert 'srvr3' in del_nodes
-        assert inst_nodes['srvr3']['deleted_roles'] == ['openstack_compute']
-        assert inst_nodes['srvr3']['existing_roles'] == ['openstack_compute']
-        assert not inst_nodes['srvr3']['instance_roles']
+        self.assertIn('srvr3', del_nodes)
+        self.assertEqual(inst_nodes['srvr3']['deleted_roles'], ['openstack_compute'])
+        self.assertEqual(inst_nodes['srvr3']['existing_roles'], ['openstack_compute'])
+        self.assertFalse(inst_nodes['srvr3']['instance_roles'])
 
     @mock.patch.object(OpenStackParams, 'get_ks_auth_token', my_token)
     @mock.patch.object(OpenStackParams, 'get_os_hypervisors', my_os_hypervisors_add)
     def test_calculate_added_os_nodes_dict(self):
         os_cluster = OpenstackCluster(
             self.instances_dict_test_add,
-            self.contrail_configuration, {}, self.hv)
+            self.contrail_configuration, {})
         inst_nodes, del_nodes = os_cluster.discover_openstack_roles(self.hv)
-        assert not del_nodes
-        assert not inst_nodes['srvr3']['deleted_roles']
-        assert inst_nodes['srvr3']['new_roles'] == ['openstack_compute']
+        self.assertFalse(del_nodes)
+        self.assertFalse(inst_nodes['srvr3']['deleted_roles'])
+        self.assertEqual(inst_nodes['srvr3']['new_roles'], ['openstack_compute'])
 
 
 if __name__ == '__main__':

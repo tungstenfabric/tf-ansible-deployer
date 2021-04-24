@@ -31,7 +31,7 @@ class FilterModule(object):
         }
 
     def calculate_openstack_roles(self, existing_dict, instances_dict, global_configuration,
-                                  contrail_configuration, kolla_config, hv):
+                                  contrail_configuration, kolla_config, hostvars):
         # don't calculate anything if global_configuration.ENABLE_DESTROY is not set
         empty_result = {"node_roles_dict": dict(),
                         "deleted_nodes_dict": dict()}
@@ -41,17 +41,15 @@ class FilterModule(object):
         if not enable_destroy:
             return str(empty_result)
 
-        self.os_roles = OpenstackCluster(instances_dict, contrail_configuration, kolla_config, hv)
-        instances, deleted_nodes_dict = self.os_roles.discover_openstack_roles(hv)
-        if self.os_roles.e is not None:
-            return str({"Exception": self.os_roles.e})
+        self.os_roles = OpenstackCluster(instances_dict, contrail_configuration, kolla_config)
+        instances, deleted_nodes_dict = self.os_roles.discover_openstack_roles(hostvars)
 
         return str({"node_roles_dict": instances,
                     "deleted_nodes_dict": deleted_nodes_dict})
 
     def calculate_contrail_roles(self, existing_dict, api_server_list,
                                  instances_dict, global_configuration,
-                                 contrail_configuration, kolla_config, hv):
+                                 contrail_configuration, kolla_config, hostvars):
         # don't calculate anything if global_configuration.ENABLE_DESTROY is not set
         empty_result = {"node_roles_dict": dict(),
                         "deleted_nodes_dict": dict(),
@@ -63,11 +61,8 @@ class FilterModule(object):
             return str(empty_result)
 
         self.contrail_roles = ContrailCluster(
-            instances_dict, contrail_configuration, kolla_config, hv)
+            instances_dict, contrail_configuration, kolla_config)
         instances, deleted_nodes_dict, api_server_ip = self.contrail_roles.discover_contrail_roles()
-
-        if self.contrail_roles.e is not None:
-            return str({"Exception": self.contrail_roles.e})
 
         return str({"node_roles_dict": instances,
                     "deleted_nodes_dict": deleted_nodes_dict,
@@ -111,7 +106,6 @@ class FilterModule(object):
 class OpenstackCluster(object):
     # OpenStackParams object
     os_params = None
-    e = None
 
     node_name_ip_map = {}
     node_ip_name_map = {}
@@ -120,12 +114,12 @@ class OpenstackCluster(object):
         "openstack_monitoring", "openstack_compute", "openstack"
     ]
 
-    def __init__(self, instances, contrail_configuration, kolla_config, hv):
+    def __init__(self, instances, contrail_configuration, kolla_config):
         # Initialize the openstack params
-        self.os_params = OpenStackParams(contrail_configuration, kolla_config, hv)
+        self.os_params = OpenStackParams(contrail_configuration, kolla_config)
         self.instances_dict = instances
 
-    def discover_openstack_roles(self, hv):
+    def discover_openstack_roles(self, hostvars):
         instances = {}
         deleted_nodes_dict = {}
 
@@ -143,8 +137,9 @@ class OpenstackCluster(object):
 
         try:
             instances, deleted_nodes_dict = \
-                self.discover_openstack_computes(instances, deleted_nodes_dict, hv)
+                self.discover_openstack_computes(instances, deleted_nodes_dict, hostvars)
         except Exception:
+            # either services are not installed yet or they are broken
             return dict(), dict()
 
         for server in instances:
@@ -192,22 +187,22 @@ class OpenstackCluster(object):
     # all the IP addresses for a host and if an address matching the IP is
     # found, then the corresponding mgmt ip is used to index into the
     # node_ip_name_map dict to get the server name
-    def get_instance_name(self, service_ip, hv):
-        for i in hv:
-            if service_ip in hv[i].get('ansible_all_ipv4_addresses', []):
-                for ip in hv[i]['ansible_all_ipv4_addresses']:
+    def get_instance_name(self, service_ip, hostvars):
+        for i in hostvars:
+            if service_ip in hostvars[i].get('ansible_all_ipv4_addresses', []):
+                for ip in hostvars[i]['ansible_all_ipv4_addresses']:
                     if ip in self.node_ip_name_map:
                         return ip, self.node_ip_name_map[ip]
         return service_ip, None
 
-    def discover_openstack_computes(self, instances, deleted_nodes_dict, hv):
+    def discover_openstack_computes(self, instances, deleted_nodes_dict, hostvars):
         # Read Openstack Computes
         response = self.os_params.get_os_hypervisors().json()
         if "hypervisors" not in response:
             return instances, deleted_nodes_dict
 
         for hyp in response["hypervisors"]:
-            server_ip, server_name = self.get_instance_name(hyp["host_ip"], hv)
+            server_ip, server_name = self.get_instance_name(hyp["host_ip"], hostvars)
             if server_name:
                 if "existing_roles" not in instances[server_name]:
                     instances[server_name]['existing_roles'] = []
@@ -226,10 +221,10 @@ class OpenstackCluster(object):
 
         for endpoint in response["endpoints"]:
             ip, port = endpoint["url"].split('://')[1].split('/')[0].split(':')
-            if port not in self.endpoint_port_role_map:
+            if port not in self.os_params.endpoint_port_role_map:
                 continue
 
-            openstack_role = "openstack_" + self.endpoint_port_role_map[port]
+            openstack_role = "openstack_" + self.os_params.endpoint_port_role_map[port]
             if ip in self.node_ip_name_map:
                 server_name = self.node_ip_name_map[ip]
                 if "existing_roles" not \
@@ -249,9 +244,11 @@ class OpenstackCluster(object):
 # existing roles
 class OpenStackParams(object):
 
+    DEFAULT_KEYSTONE_AUTH_PORT = "5000"
+
     # static params
     endpoint_port_role_map = {
-        "5000": "control",
+        DEFAULT_KEYSTONE_AUTH_PORT: "control",
         "9696": "network",
         "8776": "storage",
         "3000": "monitoring",
@@ -260,7 +257,7 @@ class OpenStackParams(object):
 
     ks_auth_url_endpoint_dict = {
         "/v3": "/auth/tokens",
-        "/v2.0": "/auth/tokens"
+        "/v2.0": "/tokens"
     }
 
     openstack_controller_roles = [
@@ -282,18 +279,18 @@ class OpenStackParams(object):
     ks_admin_tenant = ""
     ks_admin_user = ""
     ks_auth_url_version = "/v3"  # default for openstack queens is "/v3"
-    ks_auth_proto = "http://"
+    ks_auth_proto = "http"
     auth_token = None
     aaa_mode = None
 
-    def __init__(self, contrail_config, kolla_config, hv):
+    def __init__(self, contrail_config, kolla_config):
         self.ks_auth_host = contrail_config.get("KEYSTONE_AUTH_HOST", None)
         if kolla_config is not None and kolla_config.get("kolla_globals"):
             self.ks_auth_host = kolla_config["kolla_globals"].get(
                 "kolla_external_vip_address",
                 self.ks_auth_host)
             if kolla_config["kolla_globals"].get("kolla_enable_tls_external", None):
-                self.ks_auth_proto = "https://"
+                self.ks_auth_proto = "https"
         self.ks_admin_user = contrail_config.get(
             "KEYSTONE_AUTH_ADMIN_USER", "admin")
         self.ks_admin_password = contrail_config.get(
@@ -301,26 +298,26 @@ class OpenStackParams(object):
         self.ks_admin_tenant = contrail_config.get(
             "KEYSTONE_AUTH_ADMIN_TENANT", "admin")
         self.ks_auth_url_version = contrail_config.get(
-            "KEYSTONE_AUTH_URL_VERSION",
-            "/v3")
+            "KEYSTONE_AUTH_URL_VERSION", "/v3")
+        self.ks_auth_public_port = contrail_config.get(
+            "KEYSTONE_AUTH_PUBLIC_PORT", self.DEFAULT_KEYSTONE_AUTH_PORT)
         ks_tokens_url = self.ks_auth_url_endpoint_dict.get(
-            self.ks_auth_url_version,
-            self.ks_auth_url_endpoint_dict["/v3"])
+            self.ks_auth_url_version)
+        if not ks_tokens_url:
+            raise Exception("Unknown keystone auth version {}".format(self.ks_auth_url_version))
 
-        # TODO: Add support for non-default port
+        if self.ks_auth_public_port != self.DEFAULT_KEYSTONE_AUTH_PORT:
+            value = self.endpoint_port_role_map.pop(self.DEFAULT_KEYSTONE_AUTH_PORT)
+            self.endpoint_port_role_map[self.ks_auth_public_port] = value
+
         if self.ks_auth_host:
-            self.ks_auth_url = (
-                str(self.ks_auth_proto) + str(self.ks_auth_host) +
-                ':5000/v3' + str(ks_tokens_url))
-            self.os_endpoints_url = (
-                str(self.ks_auth_proto) +
-                str(self.ks_auth_host) +
-                ':5000' + str(self.ks_auth_url_version) +
-                '/endpoints')
-            self.os_hypervisors_url = (
-                str(self.ks_auth_proto) +
-                str(self.ks_auth_host) +
-                ':8774/v2.1/os-hypervisors/detail')
+            base_url = "{}://{}:{}{}".format(
+                self.ks_auth_proto, self.ks_auth_host, self.ks_auth_public_port,
+                self.ks_auth_url_version)
+            self.ks_auth_url = base_url + ks_tokens_url
+            self.os_endpoints_url = base_url + '/endpoints'
+            self.os_hypervisors_url = "{}://{}:8774/v2.1/os-hypervisors/detail".format(
+                self.ks_auth_proto, self.ks_auth_host)
 
         if contrail_config.get("CLOUD_ORCHESTRATOR") == "openstack":
             self.get_ks_auth_token(contrail_config)
@@ -408,12 +405,10 @@ class ContrailCluster(object):
     instances_dict = {}
     cc_dict = {}
     kolla_dict = {}
-    hv = {}
     node_name_ip_map = {}
     node_ip_name_map = {}
     existing_tor_agents = {}
-    proto = 'http://'
-    e = None
+    proto = 'http'
 
     contrail_object_map = {
         # FIXME: Currently we support add/delete of only vrouter nodes. When
@@ -442,15 +437,14 @@ class ContrailCluster(object):
     valid_roles = ["config", "control", "analytics_database",
                    "analytics", "analytics_alarm", "analytics_snmp", "vrouter"]
 
-    def __init__(self, instances, contrail_config, kolla_config, hv):
-        self.os_params = OpenStackParams(contrail_config, kolla_config, hv)
+    def __init__(self, instances, contrail_config, kolla_config):
+        self.os_params = OpenStackParams(contrail_config, kolla_config)
         self.instances_dict = instances
         self.cc_dict = contrail_config
         self.kolla_dict = kolla_config
-        self.hv = hv
         sslenable = contrail_config.get('SSL_ENABLE', False)
         if str(sslenable) in ['True', 'TRUE', 'yes', 'YES', 'Yes']:
-            self.proto = 'https://'
+            self.proto = 'https'
 
     def get_rest_api_response(self, url, headers, data=None, request_type=None):
         response = None
@@ -463,8 +457,7 @@ class ContrailCluster(object):
 
     def calculate_valid_api_server_ip(self, api_server_list):
         for test_ip in api_server_list:
-            test_url = self.proto + str(test_ip) + ':' + \
-                str(self.api_server_port)
+            test_url = "{}://{}:{}".format(self.proto, test_ip, self.api_server_port)
             try:
                 self.get_rest_api_response(
                     test_url,
@@ -497,10 +490,7 @@ class ContrailCluster(object):
         return ip
 
     def discover_contrail_cluster(self, instances, deleted_nodes_dict):
-        self.contrail_api_url = (
-            self.proto +
-            str(self.api_server_ip) +
-            ':' + str(self.api_server_port) + '/')
+        self.contrail_api_url = "{}://{}:{}/".format(self.proto, self.api_server_ip, self.api_server_port)
 
         for contrail_object, contrail_role in self.contrail_object_map.items():
             contrail_object_url = self.contrail_api_url + str(contrail_object)

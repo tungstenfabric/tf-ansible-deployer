@@ -113,7 +113,7 @@
     - api_server: "{{ hostvars['localhost'].api_server }}"
     - deleted_nodes_dict: "{{ hostvars['localhost'].deleted_nodes_dict }}"
   environment:
-    - https_proxy: "{{ contrail_configuration.HTTPS_PROXY|default('') }}"
-    - http_proxy: "{{ contrail_configuration.HTTP_PROXY|default('') }}"
+    - https_proxy: "{{ global_configuration.HTTPS_PROXY if global_configuration.HTTPS_PROXY is defined else contrail_configuration.HTTPS_PROXY | default('') }}"
+    - http_proxy: "{{ global_configuration.HTTP_PROXY if global_configuration.HTTP_PROXY is defined else contrail_configuration.HTTP_PROXY | default('') }}"
     - "{{ contrail_ansible_environment | default({}) }}"
   tags: always

@@ -29,5 +29,5 @@
   vars_files:
     - "{{ hostvars['localhost'].config_file }}"
   environment:
-    - https_proxy: "{{ contrail_configuration.HTTPS_PROXY | default('') }}"
-    - http_proxy: "{{ contrail_configuration.HTTP_PROXY | default('') }}"
+    - https_proxy: "{{ global_configuration.HTTPS_PROXY if global_configuration.HTTPS_PROXY is defined else contrail_configuration.HTTPS_PROXY | default('') }}"
+    - http_proxy: "{{ global_configuration.HTTP_PROXY if global_configuration.HTTP_PROXY is defined else contrail_configuration.HTTP_PROXY | default('') }}"

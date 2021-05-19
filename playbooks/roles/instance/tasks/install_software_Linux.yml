@@ -15,7 +15,7 @@
   when: provider_config[instance_data.provider] is defined
 
 - name: turn off swap
-  shell: swapoff -a && sed -i '/swap[ \t]\+swap/d' /etc/fstab
+  shell: swapoff -a && sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
 
 - name: disable cloud init
   service:

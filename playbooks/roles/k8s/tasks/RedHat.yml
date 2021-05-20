@@ -1,6 +1,6 @@
 ---
 
-- name: create k8s repo centos
+- name: create k8s repo centos from mirror
   yum_repository:
     name: Kubernetes
     description: k8s repo
@@ -8,7 +8,7 @@
     gpgcheck: no
   when: k8s_package_version is defined and global_configuration.K8S_YUM_REPO_URL is defined
 
-- name: create k8s repo centos
+- name: create k8s repo centos from upstream
   yum_repository:
     name: Kubernetes
     description: k8s repo

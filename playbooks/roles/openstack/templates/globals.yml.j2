@@ -5,15 +5,16 @@
 
 {% for key, value in final_kolla_globals.items() %}
 {% if value is mapping %}
-{% print '\n' %}
 {{ key }}:
 {% for k, v in value.items() %}
   {{ k }}: {{ v }}
 {% endfor %}
-{% print '\n' %}
+{% elif value is iterable and value is not string %}
+{{ key }}:
+{% for v in value %}
+  - {{ v }}
+{% endfor %}
 {% else %}
 {{ key }}: {{ value }}
 {% endif %}
 {% endfor %}
-
-

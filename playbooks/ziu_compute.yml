@@ -41,6 +41,7 @@
       - roles: "{{ hostvars['localhost'].roles }}"
       - instance_name: "{{ hostvars[inventory_hostname].instance_name }}"
       - contrail_configuration: "{{ hostvars['localhost'].contrail_configuration }}"
+      - global_configuration: "{{ hostvars['localhost'].global_configuration }}"
     environment:
       - https_proxy: "{{ global_configuration.HTTPS_PROXY if global_configuration.HTTPS_PROXY is defined else contrail_configuration.HTTPS_PROXY | default('') }}"
       - http_proxy: "{{ global_configuration.HTTP_PROXY if global_configuration.HTTP_PROXY is defined else contrail_configuration.HTTP_PROXY | default('') }}"

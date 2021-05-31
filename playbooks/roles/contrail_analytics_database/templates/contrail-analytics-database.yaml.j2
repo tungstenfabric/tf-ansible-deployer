@@ -57,6 +57,8 @@ services:
   query-engine:
     image: "{{ container_registry }}/contrail-analytics-query-engine:{{ contrail_version_tag }}"
     network_mode: "host"
+    cap_add:
+      - SYS_PTRACE
     env_file: /etc/contrail/common_analytics_database.env
     volumes_from:
       - node-init

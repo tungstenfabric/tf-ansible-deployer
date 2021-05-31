@@ -69,6 +69,8 @@ services:
   collector:
     image: "{{ container_registry }}/contrail-analytics-collector:{{ contrail_version_tag }}"
     network_mode: "host"
+    cap_add:
+      - SYS_PTRACE
     env_file: /etc/contrail/common_analytics.env
     volumes_from:
       - node-init

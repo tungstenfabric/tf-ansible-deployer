@@ -84,7 +84,7 @@ services:
 {% if ansible_os_family == 'RedHat' %}
       - /etc/sysconfig/network-scripts:/etc/sysconfig/network-scripts
 {% endif %}
-      - /dev/log:/dev/log
+      - /dev:/dev
       - /etc/resolv.conf:/etc/resolv.conf
     volumes_from:
       - node-init

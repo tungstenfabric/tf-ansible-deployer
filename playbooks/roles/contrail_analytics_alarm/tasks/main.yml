@@ -15,19 +15,6 @@
     zookeeper_nodes: "{{ contrail_configuration.CONTROLLER_NODES }}"
   when: contrail_configuration.CONTROLLER_NODES is defined and contrail_configuration.CONFIGDB_NODES is undefined
 
-- name: update alarm, external-kafka image
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-node-init
-    - contrail-nodemgr
-    - contrail-analytics-alarm-gen
-    - contrail-external-kafka
-    - contrail-provisioner
-  when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-
 - name: create contrail analytics_alarm docker-compose file
   template:
     src: contrail-analytics-alarm.yaml.j2

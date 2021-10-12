@@ -65,17 +65,6 @@
   ignore_errors: yes
   no_log: True
 
-- name: "update image"
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-node-init
-    - contrail-external-haproxy
-  when:
-    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-
 - name: "create tsn_haproxy compose file"
   template:
     src: haproxy.yaml.j2

@@ -1,0 +1,11 @@
+- name: update contrail webui image
+  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
+  register: res
+  retries: 5
+  until: res.rc == 0
+  with_items:
+    - contrail-controller-webui-web
+    - contrail-controller-webui-job
+  when:
+    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
+    - roles[instance_name].webui is defined

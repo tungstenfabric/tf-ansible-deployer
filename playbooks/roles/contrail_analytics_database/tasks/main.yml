@@ -51,19 +51,6 @@
   ignore_errors: yes
   no_log: True
 
-- name: update contrail analytics database image
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-node-init
-    - contrail-nodemgr
-    - contrail-analytics-query-engine
-    - contrail-external-cassandra
-    - contrail-provisioner
-  when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-
 - name: create contrail analytics database compose file
   template:
     src: contrail-analytics-database.yaml.j2

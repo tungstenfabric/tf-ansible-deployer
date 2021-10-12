@@ -43,13 +43,18 @@
     tasks:
       - include_role:
           name: contrail_vrouter
-          tasks_from: stop
+          tasks_from: "{{ item }}"
+        with_items:
+          - update_images
+          - stop
         when: roles[instance_name].vrouter is defined and ansible_system == 'Linux'
     vars:
       - roles: "{{ hostvars['localhost'].roles }}"
       - instance_name: "{{ hostvars[inventory_hostname].instance_name }}"
       - contrail_configuration: "{{ hostvars['localhost'].contrail_configuration }}"
       - global_configuration: "{{ hostvars['localhost'].global_configuration }}"
+      - container_registry: "{{ hostvars['localhost'].container_registry }}"
+      - contrail_version_tag: "{{ hostvars['localhost'].contrail_version_tag }}"
     environment:
       - https_proxy: "{{ global_configuration.HTTPS_PROXY if global_configuration.HTTPS_PROXY is defined else contrail_configuration.HTTPS_PROXY | default('') }}"
       - http_proxy: "{{ global_configuration.HTTP_PROXY if global_configuration.HTTP_PROXY is defined else contrail_configuration.HTTP_PROXY | default('') }}"

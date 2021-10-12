@@ -61,6 +61,30 @@
           extensions: ['yml']
       - include_role:
           name: contrail_config
+          tasks_from: update_images
+        when: roles[instance_name].config is defined
+      - include_role:
+          name: contrail_webui
+          tasks_from: update_images
+        when: roles[instance_name].webui is defined
+      - include_role:
+          name: contrail_redis
+          tasks_from: update_images
+        when: roles[instance_name].webui is defined or roles[instance_name].analytics is defined
+      - include_role:
+          name: contrail_analytics
+          tasks_from: update_images
+        when: roles[instance_name].analytics is defined
+      - include_role:
+          name: contrail_analytics_alarm
+          tasks_from: update_images
+        when: roles[instance_name].analytics_alarm is defined
+      - include_role:
+          name: contrail_analytics_snmp
+          tasks_from: update_images
+        when: roles[instance_name].analytics_snmp is defined
+      - include_role:
+          name: contrail_config
           tasks_from: stop
         when: roles[instance_name].config is defined
       - include_role:
@@ -121,6 +145,14 @@
     tasks:
       - include_role:
           name: contrail_control
+          tasks_from: update_images
+        when: roles[instance_name].control is defined
+      - include_role:
+          name: contrail_control_only
+          tasks_from: update_images
+        when: roles[instance_name].control_only is defined
+      - include_role:
+          name: contrail_control
           tasks_from: stop
         when: roles[instance_name].control is defined
       - include_role:
@@ -143,11 +175,19 @@
     tasks:
       - include_role:
           name: contrail_config_database
+          tasks_from: update_images
+        when: roles[instance_name].config_database is defined
+      - include_role:
+          name: contrail_config_database
           tasks_from: stop
         when: roles[instance_name].config_database is defined
       - include_role:
           name: contrail_config_database
         when: roles[instance_name].config_database is defined
+      - include_role:
+          name: contrail_analytics_database
+          tasks_from: update_images
+        when: roles[instance_name].analytics_database is defined
       - include_role:
           name: contrail_analytics_database
           tasks_from: stop

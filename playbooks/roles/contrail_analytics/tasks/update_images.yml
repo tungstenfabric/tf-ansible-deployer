@@ -1,0 +1,14 @@
+- name: update contrail analytics images
+  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
+  register: res
+  retries: 5
+  until: res.rc == 0
+  with_items:
+    - contrail-node-init
+    - contrail-nodemgr
+    - contrail-analytics-api
+    - contrail-analytics-collector
+    - contrail-provisioner
+  when:
+    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
+    - roles[instance_name].analytics is defined

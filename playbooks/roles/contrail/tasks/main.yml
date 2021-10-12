@@ -22,6 +22,10 @@
 - name: create redis
   include_role:
     name: contrail_redis
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].webui is defined or roles[instance_name].analytics is defined
   tags:
     - webui
@@ -30,6 +34,10 @@
 - name: create contrail config database
   include_role:
     name: contrail_config_database
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].config_database is defined
   tags:
     - config_database
@@ -37,6 +45,10 @@
 - name: create contrail config
   include_role:
     name: contrail_config
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].config is defined
   tags:
     - config
@@ -44,6 +56,10 @@
 - name: create contrail webui
   include_role:
     name: contrail_webui
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].webui is defined
   tags:
     - webui
@@ -51,6 +67,10 @@
 - name: create contrail control
   include_role:
     name: contrail_control
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].control is defined
   tags:
    - control
@@ -58,6 +78,10 @@
 - name: create contrail control_only
   include_role:
     name: contrail_control_only
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].control_only is defined
   tags:
     - control_only
@@ -65,6 +89,10 @@
 - name: create contrail analytics database
   include_role:
     name: contrail_analytics_database
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].analytics_database is defined
   tags:
     - analytics_database
@@ -72,6 +100,10 @@
 - name: create contrail analytics
   include_role:
     name: contrail_analytics
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].analytics is defined
   tags:
     - analytics
@@ -79,6 +111,10 @@
 - name: create contrail analytics alarm
   include_role:
     name: contrail_analytics_alarm
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when:
     - roles[instance_name].analytics_alarm is defined
   tags:
@@ -88,6 +124,10 @@
 - name: create contrail analytics snmp
   include_role:
     name: contrail_analytics_snmp
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when:
    - roles[instance_name].analytics_snmp is defined
   tags:
@@ -97,6 +137,10 @@
 - name: create k8s cni
   include_role:
     name: contrail_k8s_cni
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].k8s_node is defined
   tags:
     - k8s
@@ -111,6 +155,10 @@
 - name: create contrail kube manager
   include_role:
     name: contrail_k8s_kubemanager
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].kubemanager is defined and k8s_master_ip is defined and k8s_master_name is defined
   tags:
     - k8s
@@ -118,6 +166,10 @@
 - name: create contrail mesos manager
   include_role:
     name: contrail_mesos_mesosmanager
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].mesosmanager is defined
   tags:
     - mesos
@@ -125,6 +177,10 @@
 - name: create mesos cni
   include_role:
     name: contrail_mesos_cni
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].mesos_agent_private is defined or roles[instance_name].mesos_agent_public is defined
   tags:
     - mesos
@@ -132,6 +188,10 @@
 - name: create contrail rsyslogd for Linux
   include_role:
     name: contrail_rsyslogd
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].vrouter is defined and ansible_system == 'Linux'
   tags:
     - vrouter
@@ -140,6 +200,10 @@
 - name: create contrail vrouter for Linux
   include_role:
     name: contrail_vrouter
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].vrouter is defined and ansible_system == 'Linux'
   tags:
     - vrouter
@@ -154,16 +218,28 @@
 - name: create contrail tor agents
   include_role:
     name: contrail_toragent
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].toragent is defined
 
 - name: Pluginize legacy compute
   include_role:
     name: contrail_compute_legacy
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].openstack_compute_legacy is defined
 
 - name: create contrail vcenter-plugin
   include_role:
     name: contrail_vcenter_plugin
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when:
     - contrail_configuration.CLOUD_ORCHESTRATOR == 'vcenter'
     - roles[instance_name].vcenter_plugin is defined
@@ -173,6 +249,10 @@
 - name: create contrail vcenter-manager
   include_role:
     name: contrail_vcenter_manager
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when:
     - contrail_configuration.CLOUD_ORCHESTRATOR == 'vcenter'
     - roles[instance_name].vcenter_manager is defined
@@ -182,6 +262,10 @@
 - name: create contrail vcenter-fabric-manager
   include_role:
     name: contrail_vcenter_fabric_manager
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when:
     - roles[instance_name].vcenter_fabric_manager is defined
   tags:
@@ -195,4 +279,8 @@
 - name: create tsn haproxy
   include_role:
     name: haproxy
+    tasks_from: "{{ item }}"
+  with_items:
+    - update_images
+    - main
   when: roles[instance_name].tsn_haproxy is defined

@@ -1,0 +1,10 @@
+- name: update contrail mesosphere mesos manager image
+  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
+  register: res
+  retries: 5
+  until: res.rc == 0
+  with_items:
+    - contrail-mesosphere-mesos-manager
+  when:
+    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
+    - roles[instance_name].mesosmanager is defined

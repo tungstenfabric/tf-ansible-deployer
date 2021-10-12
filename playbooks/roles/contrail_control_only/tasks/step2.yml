@@ -70,18 +70,6 @@
 - name: "add control introspect to common_control_only_{{ location.key }}.env"
   lineinfile: dest=/etc/contrail/common_control_only_{{ location.key }}.env regexp='.*CONTROL_INTROSPECT_LISTEN_PORT$' line="CONTROL_INTROSPECT_LISTEN_PORT={{ introspect_port }}" state=present
 
-- name: update image
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-node-init
-    - contrail-nodemgr
-    - contrail-provisioner
-    - contrail-controller-control-control
-  when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-
 - name: "create contrail control {{ location.key }} compose file"
   template:
     src: contrail-control-only.yaml.j2

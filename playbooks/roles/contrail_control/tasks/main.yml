@@ -83,20 +83,6 @@
   lineinfile: dest=/etc/contrail/common_control.env regexp='^BGP_AUTO_MESH=.*' line="BGP_AUTO_MESH=false" state=present
   when: location is defined
 
-- name: update image
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-node-init
-    - contrail-nodemgr
-    - contrail-controller-control-control
-    - contrail-controller-control-named
-    - contrail-controller-control-dns
-    - contrail-provisioner
-  when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-
 - name: "create contrail control compose file"
   template:
     src: contrail-control.yaml.j2

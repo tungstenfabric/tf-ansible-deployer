@@ -13,15 +13,6 @@
   shell: python2 -c "import sys; paths = [path for path in sys.path if 'packages' in path] ; print(paths[-1])"
   register: pythonpath
 
-- name: update image
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-openstack-compute-init
-  when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-
 - name: "create contrail compute-legacy compose file"
   template:
     src: contrail-compute-legacy.yaml.j2

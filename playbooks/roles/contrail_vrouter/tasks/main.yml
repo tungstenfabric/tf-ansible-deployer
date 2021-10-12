@@ -70,21 +70,6 @@
     vrouter_kernel_init_img_name: contrail-vrouter-kernel-init
   when: ansible_os_family == 'RedHat'
 
-- name: update image
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-node-init
-    - contrail-nodemgr
-    - contrail-provisioner
-    - "{{ vrouter_kernel_init_img_name }}"
-    - contrail-vrouter-agent
-  when:
-    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-    - roles[instance_name].vrouter.AGENT_MODE is undefined or roles[instance_name].vrouter.AGENT_MODE != 'dpdk'
-
 - name: create contrail vrouter compose file
   template:
     src: contrail-vrouter.yaml.j2
@@ -104,23 +89,6 @@
     DOCKER_CLIENT_TIMEOUT: '120'
     COMPOSE_HTTP_TIMEOUT: '120'
   when: roles[instance_name].vrouter.AGENT_MODE is undefined or roles[instance_name].vrouter.AGENT_MODE != 'dpdk'
-
-- name: update image for dpdk vrouter
-  shell: "docker pull {{ container_registry }}/{{ item }}:{{ contrail_version_tag }}"
-  register: res
-  retries: 5
-  until: res.rc == 0
-  with_items:
-    - contrail-node-init
-    - contrail-nodemgr
-    - contrail-provisioner
-    - contrail-vrouter-kernel-init-dpdk
-    - contrail-vrouter-agent-dpdk
-    - contrail-vrouter-agent
-  when:
-    - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
-    - roles[instance_name].vrouter.AGENT_MODE is defined
-    - roles[instance_name].vrouter.AGENT_MODE == 'dpdk'
 
 - name: "Set variables for DPDK plugins"
   set_fact:

@@ -37,10 +37,17 @@
     vars_files:
       - "{{ hostvars['localhost'].config_file }}"
 
-  - name: Stop Vrouter
+  - name: Stop Vrouter and update images
     hosts: container_hosts
     gather_facts: yes
     tasks:
+      - include_role:
+          name: contrail_rsyslogd
+          tasks_from: update_images
+        when: roles[instance_name].vrouter is defined and ansible_system == 'Linux'
+        tags:
+          - vrouter
+          - rsyslogd
       - include_role:
           name: contrail_vrouter
           tasks_from: "{{ item }}"
@@ -48,6 +55,7 @@
           - update_images
           - stop
         when: roles[instance_name].vrouter is defined and ansible_system == 'Linux'
+        tags: vrouter
     vars:
       - roles: "{{ hostvars['localhost'].roles }}"
       - instance_name: "{{ hostvars[inventory_hostname].instance_name }}"
@@ -61,4 +69,32 @@
       - "{{ contrail_ansible_environment | default({}) }}"
     tags: always
 
-  - include: install_contrail.yml
+  - name: Start ryslogd and Vrouter
+    hosts: container_hosts
+    gather_facts: yes
+    tasks:
+      - include_vars:
+          dir: "{{ playbook_dir }}/roles/contrail/defaults"
+          extensions: ['yml']
+      - include_role:
+          name: contrail_rsyslogd
+        when: roles[instance_name].vrouter is defined and ansible_system == 'Linux'
+        tags:
+          - vrouter
+          - rsyslogd
+      - include_role:
+          name: contrail_vrouter
+        when: roles[instance_name].vrouter is defined and ansible_system == 'Linux'
+        tags: vrouter
+    vars:
+      - roles: "{{ hostvars['localhost'].roles }}"
+      - instance_name: "{{ hostvars[inventory_hostname].instance_name }}"
+      - instances: "{{ hostvars['localhost'].instances }}"
+      - contrail_configuration: "{{ hostvars['localhost'].contrail_configuration }}"
+      - global_configuration: "{{ hostvars['localhost'].global_configuration }}"
+      - container_registry: "{{ hostvars['localhost'].container_registry }}"
+      - contrail_version_tag: "{{ hostvars['localhost'].contrail_version_tag }}"
+    environment:
+      - https_proxy: "{{ global_configuration.HTTPS_PROXY if global_configuration.HTTPS_PROXY is defined else contrail_configuration.HTTPS_PROXY | default('') }}"
+      - http_proxy: "{{ global_configuration.HTTP_PROXY if global_configuration.HTTP_PROXY is defined else contrail_configuration.HTTP_PROXY | default('') }}"
+      - "{{ contrail_ansible_environment | default({}) }}"

@@ -85,6 +85,36 @@
     - contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false
     - roles[instance_name].vrouter.AGENT_MODE is undefined or roles[instance_name].vrouter.AGENT_MODE != 'dpdk'
 
+- name: stop agent and remove old vrouter if kernel-init version changed
+  when: roles[instance_name].vrouter.AGENT_MODE is undefined or roles[instance_name].vrouter.AGENT_MODE != 'dpdk'
+  block:
+    - name: check /etc/contrail/vrouter/docker-compose.yaml
+      stat:
+        path: /etc/contrail/vrouter/docker-compose.yaml
+      register: st
+    - name: compare kernel-init images and stop agent with vrouter unload
+      when: st.stat.exists is defined and st.stat.exists
+      block:
+        - name: load current vrouter compose file
+          command: cat /etc/contrail/vrouter/docker-compose.yaml
+          register: raw_config
+          ignore_errors: yes
+        - name: parse current vrouter compose file
+          set_fact:
+            current_config: "{{ raw_config.stdout | from_yaml }}"
+          when: raw_config.stdout is defined
+          ignore_errors: yes
+        - set_fact:
+            new_kernel_init_image: "{{ container_registry }}/{{ vrouter_kernel_init_img_name }}:{{ contrail_version_tag }}"
+        - name: stop vrouter agent and unload vrouter driver
+          include: stop.yml
+          when:
+            - current_config is defined
+            - current_config.services is defined
+            - current_config.services["vrouter-kernel-init"] is defined
+            - current_config.services["vrouter-kernel-init"].image is defined
+            - current_config.services["vrouter-kernel-init"].image != new_kernel_init_image
+
 - name: create contrail vrouter compose file
   template:
     src: contrail-vrouter.yaml.j2

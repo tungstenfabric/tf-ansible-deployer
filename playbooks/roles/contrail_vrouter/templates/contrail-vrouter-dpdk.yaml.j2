@@ -87,6 +87,27 @@ services:
       - vrouter-kernel-init-dpdk
       - node-init
 {% endif %}
+{% if n3000 %}
+  vrouter-plugin-n3000-init:
+    image: "{{ container_registry }}/contrail-vrouter-plugin-n3000-init-{{plugin_os}}:{{ contrail_version_tag }}"
+    network_mode: host
+    privileged: true
+    env_file: /etc/contrail/common_vrouter.env
+    pid: host
+    volumes:
+      - /lib/modules:/lib/modules
+      - /var/lib:/var/lib
+      - /etc/os-release:/etc/os-release
+      - /etc/lsb-release:/etc/lsb-release
+      - /dev:/dev
+      - /etc/sysconfig/network-scripts:/etc/sysconfig/network-scripts
+      - /bin:/host/bin
+    volumes_from:
+      - node-init
+    depends_on:
+      - vrouter-kernel-init-dpdk
+      - node-init
+{% endif %}
   vrouter-agent-dpdk:
     image: "{{ container_registry }}/contrail-vrouter-agent-dpdk:{{ contrail_version_tag }}"
     network_mode: host
@@ -106,6 +127,9 @@ services:
     depends_on:
 {% if mellanox %}
       - vrouter-plugin-mellanox-init
+{% endif %}
+{% if n3000 %}
+      - vrouter-plugin-n3000-init
 {% endif %}
       - vrouter-kernel-init-dpdk
       - node-init

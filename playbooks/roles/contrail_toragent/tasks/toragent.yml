@@ -46,7 +46,6 @@
   until: res.rc == 0
   with_items:
     - contrail-node-init
-    - contrail-nodemgr
     - contrail-tor-agent
     - contrail-provisioner
   when: contrail_configuration.UPDATE_IMAGES is undefined or contrail_configuration.UPDATE_IMAGES != false

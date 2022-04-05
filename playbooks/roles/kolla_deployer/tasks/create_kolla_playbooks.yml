@@ -41,7 +41,7 @@
   until: res | success
 
 - name: install kolla libraries
-  shell: "python setup.py install --force"
+  shell: "{{ ansible_python.executable }} setup.py install --force"
   no_log: true
   args:
     chdir: "{{ kolla_dir }}"

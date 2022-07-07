@@ -16,6 +16,8 @@
 
 - name: turn off swap
   shell: swapoff -a && sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
+  when: hostvars[inventory_hostname].instance_data.roles.k8s_master is defined or
+        hostvars[inventory_hostname].instance_data.roles.k8s_node is defined
 
 - name: disable cloud init
   service:

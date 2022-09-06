@@ -49,21 +49,20 @@ committers:
       company: 'CodiLime'
       id: 'Dysproz'
       timezone: 'Europe/Warsaw'
-#Added commitors from B&R Team
-    - name: 'Chandra Mohan G'
-      email: 'cmohan@juniper.net'
-      company: 'Juniper'
-      Juniper id: 'cmohan'
-      timezone: ‘Asia/Kolkata’
     - name: 'Minakshi'
       email: 'mlnu@juniper.net'
       company: 'Juniper'
-      Juniper id: ‘mlnu’
+      id: 'mlnu'
       timezone: 'Asia/Kolkata'
     - name: 'Ankit Patne'
       email: 'apatne@juniper.net'
       company: 'Juniper'
-      Juniper id: ‘apatne’
+      id: 'apatne'
+      timezone: 'Asia/Kolkata'
+    - name: 'Sarathkumar Pandurangan'
+      email: 'spandurangan@juniper.net'
+      company: 'Juniper'
+      id: 'spandurangan'
       timezone: 'Asia/Kolkata'
 tsc:
     # yamllint disable rule:line-length
@@ -72,3 +71,12 @@ tsc:
         - type: 'Approval'
           name: 'Committer Approval'
           link: 'https://lists.tungsten.io/g/tsc/topic/88752516#1249'
+        - type: 'committer approval'
+          name: 'Committer Approval'
+          link: 'https://wiki.tungsten.io/pages/viewpage.action?pageId=49842127&src=contextnavpagetreemode'
+        - type: 'committer approval'
+          name: 'Committer Approval'
+          link: 'https://wiki.tungsten.io/display/TUN/Committer+Approval+for+Minakshi+LNU?src=contextnavpagetreemode'
+        - type: 'committer approval'
+          name: 'Committer Approval'
+          link: 'https://wiki.tungsten.io/pages/viewpage.action?pageId=49842132&src=contextnavpagetreemode'

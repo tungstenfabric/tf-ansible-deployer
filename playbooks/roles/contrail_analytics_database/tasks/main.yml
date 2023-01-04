@@ -51,6 +51,16 @@
   ignore_errors: yes
   no_log: True
 
+- name: "Set variables for reaper tool"
+  set_fact:
+    reaper_enabled: true
+  when: contrail_configuration.CASSANDRA_REAPER_ENABLED is defined and contrail_configuration.CASSANDRA_REAPER_ENABLED == true
+
+- name: "Set variables for reaper tool"
+  set_fact:
+    reaper_enabled: false
+  when: contrail_configuration.CASSANDRA_REAPER_ENABLED is not defined or contrail_configuration.CASSANDRA_REAPER_ENABLED != true
+
 - name: create contrail analytics database compose file
   template:
     src: contrail-analytics-database.yaml.j2

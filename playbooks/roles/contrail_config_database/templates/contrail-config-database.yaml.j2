@@ -61,15 +61,20 @@ services:
     cap_add:
       - SYS_NICE
     environment:
-     - CASSANDRA_SEEDS={{ cassandra_seeds }}
-     - CASSANDRA_START_RPC=true
-     - CASSANDRA_CLUSTER_NAME=contrail_database
-     - CASSANDRA_PORT=9161
-     - CASSANDRA_CQL_PORT=9041
-     - CASSANDRA_SSL_STORAGE_PORT=7013
-     - CASSANDRA_STORAGE_PORT=7012
-     - CASSANDRA_JMX_LOCAL_PORT=7201
-     - NODE_TYPE=config-database
+      - CASSANDRA_SEEDS={{ cassandra_seeds }}
+      - CASSANDRA_START_RPC=true
+      - CASSANDRA_CLUSTER_NAME=contrail_database
+      - CASSANDRA_PORT=9161
+      - CASSANDRA_CQL_PORT=9041
+      - CASSANDRA_SSL_STORAGE_PORT=7013
+      - CASSANDRA_STORAGE_PORT=7012
+      - CASSANDRA_JMX_LOCAL_PORT=7201
+      - NODE_TYPE=config-database
+{% if reaper_enabled %}
+      - CASSANDRA_REAPER_ENABLED=true
+      - CASSANDRA_REAPER_APP_PORT=8071
+      - CASSANDRA_REAPER_ADM_PORT=8072
+{% endif %}
     volumes:
       - /etc/hosts:/etc/hosts
       - config_cassandra:/var/lib/cassandra/data

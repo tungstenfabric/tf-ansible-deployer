@@ -19,6 +19,11 @@ services:
       - NODE_TYPE=database
       - CASSANDRA_CQL_PORT=9042
       - CASSANDRA_JMX_LOCAL_PORT=7200
+{% if reaper_enabled %}
+      - CASSANDRA_REAPER_ENABLED=true
+      - CASSANDRA_REAPER_APP_PORT=8073
+      - CASSANDRA_REAPER_ADM_PORT=8074
+{% endif %}
     network_mode: "host"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

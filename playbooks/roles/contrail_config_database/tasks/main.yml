@@ -41,6 +41,16 @@
     rabbitmq_nodes: "{{ contrail_configuration.CONTROLLER_NODES }}"
   when: contrail_configuration.CONTROLLER_NODES is defined and rabbitmq_nodes is undefined
 
+- name: "Set variables for reaper tool"
+  set_fact:
+    reaper_enabled: true
+  when: contrail_configuration.CASSANDRA_REAPER_ENABLED is defined and contrail_configuration.CASSANDRA_REAPER_ENABLED == true
+
+- name: "Set variables for reaper tool"
+  set_fact:
+    reaper_enabled: false
+  when: contrail_configuration.CASSANDRA_REAPER_ENABLED is not defined or contrail_configuration.CASSANDRA_REAPER_ENABLED != true
+
 - name: "get /etc/contrail/common_config_database.env stat"
   stat:
     path: "/etc/contrail/common_config_database.env"

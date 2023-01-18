@@ -87,11 +87,6 @@ services:
       - CASSANDRA_STORAGE_PORT=7010
       - CASSANDRA_JMX_LOCAL_PORT=7200
       - NODE_TYPE=database
-{% if reaper_enabled %}
-      - CASSANDRA_REAPER_ENABLED=true
-      - CASSANDRA_REAPER_APP_PORT=8073
-      - CASSANDRA_REAPER_ADM_PORT=8074
-{% endif %}
     volumes:
      - analytics_cassandra:/var/lib/cassandra/data
      - /etc/hosts:/etc/hosts

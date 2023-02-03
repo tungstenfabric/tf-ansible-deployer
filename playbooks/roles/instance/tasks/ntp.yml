@@ -7,7 +7,7 @@
     state: latest
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: set ntp service name
   set_fact:

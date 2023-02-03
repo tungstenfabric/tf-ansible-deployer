@@ -12,7 +12,7 @@
     - PyYAML
   register: res
   retries: 5
-  until: res | success
+  until: res is success
   when: ansible_os_family == 'RedHat'
 
 # NOTE: Do not use easy_install for RedHat. There is a bug that might cause
@@ -48,4 +48,4 @@
   become: yes
   register: res
   retries: 5
-  until: res | success
+  until: res is success

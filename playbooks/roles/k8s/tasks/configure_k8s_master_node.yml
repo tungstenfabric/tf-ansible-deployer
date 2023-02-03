@@ -43,7 +43,7 @@
   when: listen_ip is defined and master_running == false
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: initialize k8s master without listen ip
   shell: |

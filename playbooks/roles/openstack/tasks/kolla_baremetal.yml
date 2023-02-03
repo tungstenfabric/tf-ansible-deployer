@@ -39,7 +39,7 @@
     - kolla_globals.enable_swift | default('yes') | bool
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: Install configfs module needed for ironic on Debian hosts
   modprobe:

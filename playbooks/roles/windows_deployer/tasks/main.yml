@@ -6,7 +6,7 @@
     state: latest
   register: res
   retries: 5
-  until: res | success
+  until: res is success
   with_items:
     - pywinrm
     - requests

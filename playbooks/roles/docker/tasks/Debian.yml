@@ -4,7 +4,7 @@
     name: "{{ item }}"
   register: res
   retries: 5
-  until: res | success
+  until: res is success
   with_items:
     - apt-transport-https
     - ca-certificates
@@ -28,4 +28,4 @@
     update_cache: yes
   register: res
   retries: 5
-  until: res | success
+  until: res is success

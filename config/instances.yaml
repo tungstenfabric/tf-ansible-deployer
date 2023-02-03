@@ -1,10 +1,40 @@
 provider_config:
   bms:
+    ssh_pwd: password
+    ssh_user: root
+    ntpserver: 0.debian.pool.ntp.org
+    domainsuffix: local
 instances:
-  bms1:
+  mgmt:
     provider: bms
-    ip: 192.168.1.100
+    ip: 10.0.34.239
+    roles:
+      config_database:
+      config:
+      control:
+      analytics_database:
+      analytics:
+      webui:
+  kvm1:
+    provider: bms
+    ip: 10.0.35.177
+    roles:
+      vrouter:
+  kvm2:
+    provider: bms
+    ip: 10.0.35.195
+    roles:
+      vrouter:
+  kvm3:
+    provider: bms
+    ip: 10.0.35.196
+    roles:
+      vrouter:
 global_configuration:
-  CONTAINER_REGISTRY: michaelhenkel
 contrail_configuration:
-  CONTRAIL_VERSION: queens-5.0-20180219195722
+  CONTRAIL_VERSION: latest
+  CONFIG_NODEMGR__DEFAULTS__minimum_diskGB: 2
+  DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: 2
+  CONFIG_DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: 2
+  UPGRADE_KERNEL: true
+ansible_os_family: "RedHat"

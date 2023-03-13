@@ -25,7 +25,7 @@
     - cleanup
 
 - name: Stop and remove toragent Container and volumes
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/{{ toragent_name }}
     state: absent
     remove_images: all

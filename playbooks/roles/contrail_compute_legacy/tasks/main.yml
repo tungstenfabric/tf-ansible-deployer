@@ -19,7 +19,7 @@
     dest: "/etc/contrail/compute-legacy/docker-compose.yaml"
 
 - name: "start contrail compute-legacy"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/compute-legacy
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

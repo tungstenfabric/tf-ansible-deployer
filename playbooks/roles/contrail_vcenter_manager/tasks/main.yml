@@ -45,6 +45,6 @@
     dest: /etc/contrail/vcenter_manager/docker-compose.yaml
 
 - name: start contrail vcenter-manager
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/vcenter_manager
 

@@ -11,7 +11,7 @@
     dest: /etc/contrail/analytics_snmp/docker-compose.yaml
 
 - name: start contrail analytics_snmp
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/analytics_snmp
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

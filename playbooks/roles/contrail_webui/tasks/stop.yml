@@ -1,5 +1,5 @@
 - name: "stop contrail webui"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/webui
     state: absent
   environment:

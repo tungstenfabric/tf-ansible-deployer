@@ -113,7 +113,7 @@
     recurse: yes
 
 - name: "start contrail vrouter"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/vrouter
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'
@@ -135,7 +135,7 @@
   when: roles[instance_name].vrouter.AGENT_MODE is defined and roles[instance_name].vrouter.AGENT_MODE == 'dpdk'
 
 - name: "start contrail dpdk vrouter"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/vrouter
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

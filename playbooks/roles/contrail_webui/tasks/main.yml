@@ -47,7 +47,7 @@
     dest: "/etc/contrail/webui/docker-compose.yaml"
 
 - name: "start contrail webui"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/webui
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

@@ -15,7 +15,7 @@
     dest: "/etc/contrail/redis/docker-compose.yaml"
 
 - name: "start redis"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/redis
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

@@ -7,3 +7,7 @@
   until: res is success
   with_items:
     - docker-compose
+
+- name: upgrade docker-compose and PyYAML on Ubuntu 22.04
+  shell: pip3 install PyYAML docker-compose --upgrade
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version|int == 22

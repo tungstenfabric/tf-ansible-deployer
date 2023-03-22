@@ -59,7 +59,7 @@
   shell: pip3 --version
   ignore_errors: true
   register: pip_check
-  when: ansible_distribution_major_version|int == 8
+  when: (ansible_distribution_major_version|int == 8) or (ansible_os_family == 'Debian')
 
 - name: Install python3-pip on rocky8
   yum: name={{ item }} state=installed update_cache=yes
@@ -72,3 +72,16 @@
 - name: upgrade pip on rocky8
   shell: pip3 install pip --upgrade
   when: ansible_distribution_major_version|int == 8
+
+- name: Install python3-pip on Ubuntu
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  register: res
+  retries: 5
+  until: res is success
+  with_items:
+    - python3-pip
+  when:
+    - ansible_os_family == 'Debian'
+    - pip_check.rc != 0

@@ -1,4 +1,14 @@
 ---
+
+- name: Remove package unattended-upgrades
+  apt:
+    pkg: "{{ item }}"
+    state: absent
+    force: true
+  with_items:
+    - unattended-upgrades
+  ignore_errors: yes
+
 - name: Install docker-compose
   apt:
     name: "{{ item }}"

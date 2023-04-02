@@ -32,10 +32,12 @@ if [[ $REV =~ ^7.* ]];then
   pip install --ignore-installed PyYAML
   pip install ansible==2.7.18
 elif [[ $REV =~ ^8.* ]];then
-  rpm -qa |grep python3-pip || yum install -y python3-pip
+  pip3 -v || yum install -y python3-pip
   pip3 install requests
   pip3 install --upgrade PyYAML
   ls /usr/bin/python || ln -s /usr/bin/python3 /usr/bin/python
+
+  ansible-playbook -v || yum install -y epel-release && yum install -y ansible
 fi
 
 # 3. Configure instances

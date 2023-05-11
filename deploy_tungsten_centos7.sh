@@ -33,11 +33,13 @@ if [[ $REV =~ ^7.* ]];then
   pip install ansible==2.7.18
 elif [[ $REV =~ ^8.* ]];then
   pip3 -V || yum install -y python3-pip
+  pip3 install --upgrade pip
   pip3 install requests
   pip3 install --upgrade PyYAML
   ls /usr/bin/python || ln -s /usr/bin/python3 /usr/bin/python
 
   ansible-playbook -v || yum install -y epel-release && yum install -y ansible
+  pip3 install --upgrade ansible
 fi
 
 # 3. Configure instances

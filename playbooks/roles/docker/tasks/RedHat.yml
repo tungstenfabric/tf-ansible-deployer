@@ -1,12 +1,12 @@
 ---
-- name: create docker repo
-  yum_repository:
-    name: dockerrepo
-    description: Docker Repository
-    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
-    gpgkey: https://download.docker.com/linux/centos/gpg
-    gpgcheck: yes
-  when: docker_mirror_url is not defined
+- name: Install yum-utils
+  yum:
+     name: yum-utils
+     state: present
+
+- name: Add Docker repo
+  command:
+     cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 - name: configure docker mirror
   yum_repository:
@@ -16,28 +16,9 @@
     gpgcheck: no
   when: docker_mirror_url is defined
 
-# docker-ce-18 requries pigz which is available starting from rhel8
-# so, use epel
-- name: configure epel
-  yum:
-    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
-  when: ansible_distribution_major_version|int < 8
-  register: res
-  retries: 5
-  until: res is success
-
-- name: configure CentOS-extras repo
-  yum_repository:
-    name: CentOS-extras
-    description: CentOS extras - $basearch
-    baseurl: http://mirror.centos.org/centos/7/extras/x86_64
-    gpgkey: http://centos.org/keys/RPM-GPG-KEY-CentOS-7
-    gpgcheck: yes
-  when: ansible_distribution_major_version|int == 7
-
 - name: install docker
   yum:
-    name: docker-ce-18.03.1.ce
+    name: docker-ce
   register: res
   retries: 5
   until: res is success

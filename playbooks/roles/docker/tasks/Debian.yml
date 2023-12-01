@@ -1,31 +1,29 @@
 ---
-- name: Install pre-requisites
+
+- name: Remove package unattended-upgrades
+  apt:
+    pkg: "{{ item }}"
+    state: absent
+    force: true
+  with_items:
+    - unattended-upgrades
+  when: ansible_facts['os_family'] == "Debian"
+  ignore_errors: yes
+
+- name: Make sure /var/lib/dpkg/lock-frontend is not in use
+  shell: "lsof -t /var/lib/dpkg/lock-frontend | xargs kill -9"
+  when: ansible_facts['os_family'] == "Debian"
+  ignore_errors: yes
+
+- name: Install docker-compose
   apt:
     name: "{{ item }}"
   register: res
   retries: 5
-  until: res | success
+  until: res is success
   with_items:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - software-properties-common
+    - docker-compose
 
-- name: add docker repo key
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-
-- name: create docker repo
-  apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-    state: present
-
-- name: install docker
-  apt:
-    name: "docker-ce=18.06.3~ce~3-0~ubuntu"
-    state: present
-    update_cache: yes
-  register: res
-  retries: 5
-  until: res | success
+- name: upgrade docker-compose and PyYAML on Ubuntu 22.04
+  shell: pip3 install PyYAML docker-compose --upgrade
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version|int == 22

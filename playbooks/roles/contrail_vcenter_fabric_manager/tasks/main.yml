@@ -39,7 +39,7 @@
     dest: /etc/contrail/vcenter_fabric_manager/docker-compose.yaml
 
 - name: start contrail vcenter-fabric-manager
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/vcenter_fabric_manager
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

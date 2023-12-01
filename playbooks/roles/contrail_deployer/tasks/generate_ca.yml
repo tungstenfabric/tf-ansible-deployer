@@ -5,7 +5,7 @@
     state: present
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: create certs directories
   become: yes

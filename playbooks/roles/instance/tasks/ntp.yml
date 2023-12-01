@@ -7,7 +7,8 @@
     state: latest
   register: res
   retries: 5
-  until: res | success
+  until: res is success
+  when: ansible_distribution_major_version|int == 7
 
 - name: set ntp service name
   set_fact:
@@ -15,18 +16,30 @@
 
 - name: stop ntp service
   service: name={{ ntp_svc_name }} state=stopped enabled=yes
+  when: ansible_distribution_major_version|int == 7
 
 - name: set ntp server
   template:
     src: ntp.conf.j2
     dest: /etc/ntp.conf
+  when: ansible_distribution_major_version|int == 7
 
 - name: initial time sync
   shell: "ntpdate {{ provider_data.ntpserver }}"
   ignore_errors: yes
+  when: ansible_distribution_major_version|int == 7
 
 - name: start ntp service
   service: name={{ ntp_svc_name }} state=started enabled=yes
+  when: ansible_distribution_major_version|int == 7
+
+- name: Install chrony
+  dnf:
+    name: ['chrony', 'ntpstat']
+    state: present
+    update_cache: yes
+  when:
+    - ansible_distribution_major_version|int == 8
 
 # centos(redhat?) uses chronyd by default and run it after restart instead of ntpd
 # service can be absent - so ignore it

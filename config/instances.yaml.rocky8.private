@@ -5,9 +5,9 @@ provider_config:
     ntpserver: 0.debian.pool.ntp.org
     domainsuffix: local
 instances:
-  mgmt:
+  controller:
     provider: bms
-    ip: 10.0.34.239
+    ip: 10.0.34.228
     roles:
       config_database:
       config:
@@ -15,27 +15,33 @@ instances:
       analytics_database:
       analytics:
       webui:
+  gateway:
+    provider: bms
+    ip: 172.20.0.180
+    roles:
+      vrouter:
   kvm1:
     provider: bms
-    ip: 10.0.35.177
+    ip: 172.20.0.181
     roles:
       vrouter:
   kvm2:
     provider: bms
-    ip: 10.0.35.195
-    roles:
-      vrouter:
-  kvm3:
-    provider: bms
-    ip: 10.0.35.196
+    ip: 172.20.0.182
     roles:
       vrouter:
 global_configuration:
-  CONTAINER_REGISTRY: tungstenfabric
+  CONTAINER_REGISTRY: 10.0.34.8:5000/tungstenfabric
+  REGISTRY_PRIVATE_INSECURE: true
+  CONTAINER_REGISTRY_USERNAME: username
+  CONTAINER_REGISTRY_PASSWORD: password
 contrail_configuration:
-  CONTRAIL_VERSION: latest
+  CONTRAIL_VERSION: "2023-03-10"
   CONFIG_NODEMGR__DEFAULTS__minimum_diskGB: 2
   DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: 2
   CONFIG_DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: 2
-  UPGRADE_KERNEL: true
+  UPGRADE_KERNEL: false
+  VROUTER_GATEWAY: 172.20.0.1
+  #CONTROL_NODES:
 ansible_os_family: "RedHat"
+ansible_python_interpreter: /usr/bin/python3

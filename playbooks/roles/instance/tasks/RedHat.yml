@@ -1,4 +1,10 @@
 ---
+- name: install libselinux-python package required by selinux
+  yum:
+    name: "libselinux-python"
+    state: present
+  when: ansible_distribution_major_version|int == 7
+
 - name: set selinux to permissive
   selinux:
     policy: targeted

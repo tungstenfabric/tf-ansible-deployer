@@ -68,7 +68,7 @@
 - name: set vrouter kernel init image name
   set_fact:
     vrouter_kernel_init_img_name: contrail-vrouter-kernel-init
-  when: ansible_os_family == 'RedHat'
+  when: ansible_os_family in ['RedHat', 'Rocky', 'AlmaLinux']
 
 - name: stop agent and remove old vrouter if kernel-init version changed
   when: roles[instance_name].vrouter.AGENT_MODE is undefined or roles[instance_name].vrouter.AGENT_MODE != 'dpdk'
@@ -113,7 +113,7 @@
     recurse: yes
 
 - name: "start contrail vrouter"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/vrouter
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'
@@ -135,7 +135,7 @@
   when: roles[instance_name].vrouter.AGENT_MODE is defined and roles[instance_name].vrouter.AGENT_MODE == 'dpdk'
 
 - name: "start contrail dpdk vrouter"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/vrouter
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

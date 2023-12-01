@@ -38,7 +38,7 @@
     requirements: "{{ kolla_dir }}/requirements.txt"
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: install kolla libraries
   shell: "{{ ansible_python.executable }} setup.py install --force"

@@ -48,7 +48,8 @@
     version: "1.24.1"
   register: res
   retries: 5
-  until: res | success
+  until: res is success
+  when: ansible_os_family == "RedHat"
 
 - name: Manage /etc/hosts
   include: manage_etc_hosts.yml

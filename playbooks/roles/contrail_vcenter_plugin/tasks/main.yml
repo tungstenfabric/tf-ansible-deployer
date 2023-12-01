@@ -85,7 +85,7 @@
   when: roles[item.key].vrouter is defined and instances[item.key].esxi_host is defined
  
 - name: start contrail vcenter-plugin
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/vcenter_plugin
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

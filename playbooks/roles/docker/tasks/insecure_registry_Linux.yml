@@ -39,12 +39,9 @@
 
     - name: reload systemd
       shell: systemctl daemon-reload
-      when: ansible_os_family == 'RedHat'
+      when: ansible_os_family in ['RedHat', 'Rocky', 'AlmaLinux']
 
-    - name: restart docker daemon
-      service:
-        enabled: yes
-        name: docker
-        state: restarted
+    - name: start and reload docker daemon
+      shell: systemctl start docker && systemctl reload docker
 
   when: docker_registry.split('/')[0] not in insecure_registries

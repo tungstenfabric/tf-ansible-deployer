@@ -21,11 +21,32 @@
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
     state: present
 
-- name: install docker
+- name: install docker for ubuntu18
   apt:
     name: "docker-ce=18.06.3~ce~3-0~ubuntu"
     state: present
     update_cache: yes
+  when: ansible_distribution_major_version|int == 18
+  register: res
+  retries: 5
+  until: res | success
+
+- name: install docker for ubuntu20
+  apt:
+    name: "docker-ce=5:24.0.7-1~ubuntu.20.04~focal"
+    state: present
+    update_cache: yes
+  when: ansible_distribution_major_version|int == 20
+  register: res
+  retries: 5
+  until: res | success
+
+- name: install docker for other ubuntu
+  apt:
+    name: "docker-ce"
+    state: present
+    update_cache: yes
+  when: ansible_distribution_major_version|int != 20 and ansible_distribution_major_version|int != 18
   register: res
   retries: 5
   until: res | success

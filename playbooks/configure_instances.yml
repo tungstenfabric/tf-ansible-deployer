@@ -22,6 +22,11 @@
 - name: Configure instance(s)
   hosts: container_hosts
   gather_facts: yes
+  pre_tasks:
+    - name: A bugfix for Ubuntu 20.04
+      set_fact:
+        ansible_os_family: "Debian"
+      when: ansible_os_family is undefined
   roles:
     - pip
     - instance

@@ -45,10 +45,9 @@
 - name: install python compose
   pip:
     name: docker-compose
-    version: "1.24.1"
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: Manage /etc/hosts
   include: manage_etc_hosts.yml

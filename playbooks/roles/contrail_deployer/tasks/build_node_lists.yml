@@ -108,26 +108,6 @@
   with_dict: "{{ hostvars['localhost']['instances'] }}"
 
 - set_fact:
-    mesos_master_nodes_list: []
-- name: add mesos_master nodes to the list
-  set_fact:
-    mesos_master_nodes_list: "{{ mesos_master_nodes_list + [ item.value.private_ip | default(item.value.ip) ] }}"
-  when:
-    - item.value.roles is defined
-    - item.value.roles.mesos_master is defined
-  with_dict: "{{ hostvars['localhost']['instances'] }}"
-
-- set_fact:
-    mesos_agent_nodes_list: []
-- name: add mesos_agent nodes to the list
-  set_fact:
-    mesos_node_nodes_list: "{{ mesos_agent_nodes_list + [ item.value.private_ip | default(item.value.ip) ] }}"
-  when:
-    - item.value.roles is defined
-    - item.value.roles.mesos_agent_private is defined or item.value.roles.mesos_agent_public is defined
-  with_dict: "{{ hostvars['localhost']['instances'] }}"
-
-- set_fact:
     kubemanager_nodes_list: []
 - name: add kubemanager nodes to the list
   set_fact:
@@ -145,36 +125,6 @@
   when:
     - item.value.roles is defined
     - item.value.roles.openstack is defined or item.value.roles.openstack_control is defined
-  with_dict: "{{ hostvars['localhost']['instances'] }}"
-
-- set_fact:
-    vcenter_plugin_nodes_list: []
-- name: add vcenter_plugin nodes to the list
-  set_fact:
-    vcenter_plugin_nodes_list: "{{ vcenter_plugin_nodes_list + [ item.value.private_ip | default(item.value.ip) ] }}"
-  when:
-    - item.value.roles is defined
-    - item.value.roles.vcenter_plugin is defined
-  with_dict: "{{ hostvars['localhost']['instances'] }}"
-
-- set_fact:
-    vcenter_manager_nodes_list: []
-- name: add vcenter_manager nodes to the list
-  set_fact:
-    vcenter_manager_nodes_list: "{{ vcenter_manager_nodes_list + [ item.value.private_ip | default(item.value.ip) ] }}"
-  when:
-    - item.value.roles is defined
-    - item.value.roles.vcenter_manager is defined
-  with_dict: "{{ hostvars['localhost']['instances'] }}"
-
-- set_fact:
-    vcenter_fabric_manager_nodes_list: []
-- name: add vcenter_fabric_manager nodes to the list
-  set_fact:
-    vcenter_fabric_manager_nodes_list: "{{ vcenter_fabric_manager_nodes_list + [ item.value.private_ip | default(item.value.ip) ] }}"
-  when:
-    - item.value.roles is defined
-    - item.value.roles.vcenter_fabric_manager is defined
   with_dict: "{{ hostvars['localhost']['instances'] }}"
 
 - set_fact:

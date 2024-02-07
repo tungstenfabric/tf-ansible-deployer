@@ -11,7 +11,7 @@
   register: rc
   with_items: "{{ dir_out.files }}"
 
-- docker_service:
+- docker_compose:
     project_src: "{{ item.item.path }}"
     state: absent
     remove_images: all

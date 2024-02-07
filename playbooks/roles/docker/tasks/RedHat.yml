@@ -24,11 +24,11 @@
   when: ansible_distribution_major_version|int < 8
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: install docker
   yum:
     name: docker-ce-18.03.1.ce
   register: res
   retries: 5
-  until: res | success
+  until: res is success

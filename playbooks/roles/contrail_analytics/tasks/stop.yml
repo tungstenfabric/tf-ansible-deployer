@@ -1,6 +1,6 @@
 ---
 - name: stop contrail analytics
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/analytics
     state: absent
   environment:

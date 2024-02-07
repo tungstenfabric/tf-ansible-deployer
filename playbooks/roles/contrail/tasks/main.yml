@@ -163,28 +163,6 @@
   tags:
     - k8s
 
-- name: create contrail mesos manager
-  include_role:
-    name: contrail_mesos_mesosmanager
-    tasks_from: "{{ item }}"
-  with_items:
-    - update_images
-    - main
-  when: roles[instance_name].mesosmanager is defined
-  tags:
-    - mesos
-
-- name: create mesos cni
-  include_role:
-    name: contrail_mesos_cni
-    tasks_from: "{{ item }}"
-  with_items:
-    - update_images
-    - main
-  when: roles[instance_name].mesos_agent_private is defined or roles[instance_name].mesos_agent_public is defined
-  tags:
-    - mesos
-
 - name: create contrail rsyslogd for Linux
   include_role:
     name: contrail_rsyslogd
@@ -208,13 +186,6 @@
   tags:
     - vrouter
 
-- name: create contrail vrouter for Win32NT
-  include_role:
-    name: contrail_vrouter_windows
-  when: roles[instance_name].vrouter is defined and ansible_system == 'Win32NT'
-  tags:
-    - vrouter
-
 - name: create contrail tor agents
   include_role:
     name: contrail_toragent
@@ -232,49 +203,6 @@
     - update_images
     - main
   when: roles[instance_name].openstack_compute_legacy is defined
-
-- name: create contrail vcenter-plugin
-  include_role:
-    name: contrail_vcenter_plugin
-    tasks_from: "{{ item }}"
-  with_items:
-    - update_images
-    - main
-  when:
-    - contrail_configuration.CLOUD_ORCHESTRATOR == 'vcenter'
-    - roles[instance_name].vcenter_plugin is defined
-  tags:
-    - vcenter
-
-- name: create contrail vcenter-manager
-  include_role:
-    name: contrail_vcenter_manager
-    tasks_from: "{{ item }}"
-  with_items:
-    - update_images
-    - main
-  when:
-    - contrail_configuration.CLOUD_ORCHESTRATOR == 'vcenter'
-    - roles[instance_name].vcenter_manager is defined
-  tags:
-    - vcenter
-
-- name: create contrail vcenter-fabric-manager
-  include_role:
-    name: contrail_vcenter_fabric_manager
-    tasks_from: "{{ item }}"
-  with_items:
-    - update_images
-    - main
-  when:
-    - roles[instance_name].vcenter_fabric_manager is defined
-  tags:
-    - vcenter
-
-- name: create win cnm plugin
-  include_role:
-    name: contrail_cnm_windows
-  when: roles[instance_name].win_cnm_plugin is defined
 
 - name: create tsn haproxy
   include_role:

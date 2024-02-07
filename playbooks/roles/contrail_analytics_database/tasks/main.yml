@@ -57,7 +57,7 @@
     dest: /etc/contrail/analytics_database/docker-compose.yaml
 
 - name: start contrail analyticsdb
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/analytics_database
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

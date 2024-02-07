@@ -4,7 +4,7 @@
     name: "{{ item }}"
   register: res
   retries: 5
-  until: res | success
+  until: res is success
   with_items:
     - apt-transport-https
     - ca-certificates
@@ -29,7 +29,7 @@
   when: ansible_distribution_major_version|int == 18
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: install docker for ubuntu20
   apt:
@@ -39,7 +39,7 @@
   when: ansible_distribution_major_version|int == 20
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: install docker for other ubuntu
   apt:
@@ -49,4 +49,4 @@
   when: ansible_distribution_major_version|int != 20 and ansible_distribution_major_version|int != 18
   register: res
   retries: 5
-  until: res | success
+  until: res is success

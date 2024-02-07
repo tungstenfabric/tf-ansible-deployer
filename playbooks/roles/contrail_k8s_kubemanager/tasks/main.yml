@@ -51,7 +51,7 @@
     dest: /etc/contrail/kubemanager_{{ kube_cluster_name }}/docker-compose.yaml
 
 - name: start contrail kubemanager
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/kubemanager_{{ kube_cluster_name }}
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

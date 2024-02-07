@@ -70,7 +70,7 @@
     dest: "/etc/contrail/cni/docker-compose.yaml"
 
 - name: "start contrail cni"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/cni
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

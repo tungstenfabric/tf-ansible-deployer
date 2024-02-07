@@ -1,6 +1,6 @@
 ---
 - name: Stop control only
-  docker_service:
+  docker_compose:
     project_src: "/etc/contrail/control_only_{{ location.key }}"
     state: absent
   environment:

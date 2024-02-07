@@ -11,7 +11,7 @@
     dest: "/etc/contrail/rsyslogd/docker-compose.yaml"
 
 - name: "start rsyslogd"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/rsyslogd
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

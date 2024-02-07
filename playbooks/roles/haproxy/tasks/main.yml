@@ -71,7 +71,7 @@
     dest: "/etc/contrail/tsn_haproxy/docker-compose.yaml"
 
 - name: "start tsn_haproxy container"
-  docker_service:
+  docker_compose:
     project_src: /etc/contrail/tsn_haproxy
   environment:
     DOCKER_CLIENT_TIMEOUT: '120'

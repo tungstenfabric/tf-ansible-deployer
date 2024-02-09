@@ -6,7 +6,7 @@ os_nodes_storage: >-
       {%- for k,v in hostvars['localhost']['instances'].items() -%}
        {%- if v.roles is not defined or v.roles.openstack is defined or v.roles.openstack_control is defined or v.roles.openstack_storage is defined -%}
         {%- if hostvars[v.ip]['ansible_' + hostvars[v.ip]['network_interface_detected']].get('ipv4',{}).get('address') -%}
-         {%- do node_list.append(hostvars[v.ip]['ansible_' + hostvars[v.ip]['network_interface_detected']].get('ipv4',{}).get('address')) -%}
+         {{ node_list.append(hostvars[v.ip]['ansible_' + hostvars[v.ip]['network_interface_detected']].get('ipv4',{}).get('address')) | default("",True) }}
         {%- endif -%}
        {%- endif -%}
       {%- endfor -%}

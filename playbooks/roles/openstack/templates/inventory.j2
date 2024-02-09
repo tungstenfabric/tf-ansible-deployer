@@ -8,12 +8,12 @@
 {% if role in hostvars[host]['group_names'] %}
 {% set auth=[] %}
 {% if hostvars[host]['ansible_ssh_private_key_file'] is defined %}
-{% do auth.append("ansible_ssh_private_key_file=" + hostvars[host]['ansible_ssh_private_key_file']) %}
+{{ auth.append("ansible_ssh_private_key_file=" + hostvars[host]['ansible_ssh_private_key_file']) | default("",True) }}
 {% elif hostvars[host]['ansible_ssh_pass'] is defined %}
-{% do auth.append("ansible_ssh_pass=" + hostvars[host]['ansible_ssh_pass']) %}
+{{ auth.append("ansible_ssh_pass=" + hostvars[host]['ansible_ssh_pass']) | default("",True) }}
 {% endif %}
 {% if hostvars[host]['ansible_ssh_user'] is defined %}
-{% do auth.append("ansible_user=" + hostvars[host]['ansible_ssh_user'])%}
+{{ auth.append("ansible_user=" + hostvars[host]['ansible_ssh_user']) | default("",True) }}
 {% endif %}
 {% if auth %}
 {{ host }} {{ auth | join(' ') }}

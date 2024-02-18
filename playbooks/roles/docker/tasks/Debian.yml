@@ -1,15 +1,10 @@
 ---
 - name: Install pre-requisites
   apt:
-    name: "{{ item }}"
+    name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
   register: res
   retries: 5
   until: res is success
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - software-properties-common
 
 - name: add docker repo key
   apt_key:

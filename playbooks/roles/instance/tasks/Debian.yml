@@ -1,1 +1,11 @@
 ---
+
+- name: install chrony instead of timesyncd
+  apt:
+    name: chrony
+    state: latest
+    install_recommends: yes
+    update_cache: true
+  register: res
+  retries: 5
+  until: res is success

@@ -33,7 +33,7 @@
   set_fact:
     k8s_package_version: "-{{ k8s_version }}-0"
   when:
-    - ansible_os_family == 'RedHat'
+    - ansible_os_family == 'RedHat' or ansible_os_family == 'Rocky'
     - instance_data.roles is defined
     - instance_data.roles.k8s_master is defined or instance_data.roles.k8s_node is defined
 

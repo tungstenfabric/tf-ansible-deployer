@@ -1,0 +1,33 @@
+---
+
+- name: create k8s yum repo from mirror
+  yum_repository:
+    name: Kubernetes
+    description: k8s repo
+    baseurl: "{{ global_configuration.K8S_YUM_REPO_URL }}"
+    repo_gpgcheck: "{{ global_configuration.K8S_YUM_REPO_GPGCHECK | default('no') }}"
+    gpgcheck: "{{ global_configuration.K8S_YUM_REPO_GPGCHECK | default('no') }}"
+  when: k8s_package_version is defined and global_configuration.K8S_YUM_REPO_URL is defined
+
+- name: create k8s yum repo from upstream
+  yum_repository:
+    name: Kubernetes
+    description: k8s repo
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    repo_gpgcheck: "{{ global_configuration.K8S_YUM_REPO_GPGCHECK | default('no') }}"
+    gpgcheck: "{{ global_configuration.K8S_YUM_REPO_GPGCHECK | default('no') }}"
+  when: k8s_package_version is defined and global_configuration.K8S_YUM_REPO_URL is not defined
+
+# using this to avoid issue https://github.com/ansible/ansible/issues/20711
+- name: make cache to import gpg keys
+  command: "yum -q makecache -y --disablerepo='*' --enablerepo='Kubernetes'"
+  when: k8s_package_version is defined
+
+# disable obsolete packages to avoid issue in kubernetes repos
+# https://github.com/kubernetes/kubernetes/issues/92242#issuecomment-646588615
+- name: Set obsoletes to 0
+  lineinfile:
+    path: /etc/yum.conf
+    regexp: '^obsoletes=1'
+    line: obsoletes=0
